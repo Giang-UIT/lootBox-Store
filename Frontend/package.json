@@ -13,6 +13,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@vue/cli-service": "^5.0.9",
     "axios": "^1.13.6",
     "pinia": "^3.0.4",
     "update": "^0.7.4",
