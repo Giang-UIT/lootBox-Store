@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import api from "../api"
 
 type StoredAccount = {
   id: number
@@ -61,10 +62,10 @@ const deleteAddress = async (addressId: number) => {
   if (!confirm('Are you sure you want to delete this address?')) return
   if (!account.value) return
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/accounts/${account.value.id}/addresses/${addressId}/`, {
+    const response = await api.get(`/accounts/${account.value.id}/addresses/${addressId}/`, {
       method: 'DELETE'
     })
-    if (response.ok) {
+    if (response.status) {
       addresses.value = addresses.value.filter(a => a.id !== addressId)
     } else {
       alert('Failed to delete address')
