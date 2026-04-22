@@ -39,9 +39,9 @@ onMounted(() => {
 const loadAddresses = async () => {
   if (!account.value) return
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/accounts/${account.value.id}/addresses/`)
-    if (response.ok) {
-      addresses.value = await response.json()
+    const response = await api.get(`/accounts/${account.value.id}/addresses/`)
+    if (response.status) {
+      addresses.value = await response.data.json()
     } else {
       console.error('Failed to load addresses')
     }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import api from "../api"
 
 type StoredAccount = {
   id: number
@@ -73,9 +74,9 @@ onMounted(async () => {
 const loadAddressForEdit = async () => {
   if (!savedAccount.value || !editingAddressId.value) return
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/accounts/${savedAccount.value.id}/addresses/${editingAddressId.value}/`)
-    if (response.ok) {
-      const address = await response.json()
+    const response = await api.get(`/accounts/${savedAccount.value.id}/addresses/${editingAddressId.value}/`)
+    if (response.status) {
+      const address = await response.data.json()
       phoneNumber.value = address.phone_number
       streetAddress.value = address.line1
       apartment.value = address.line2
@@ -123,7 +124,7 @@ const submitAddress = async () => {
     let response
     if (isEditing.value && editingAddressId.value) {
       // Update
-      response = await fetch(`http://127.0.0.1:8000/api/accounts/${account.id}/addresses/${editingAddressId.value}/`, {
+      response = await api.put(`/accounts/${account.id}/addresses/${editingAddressId.value}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -140,7 +141,7 @@ const submitAddress = async () => {
       })
     } else {
       // Create
-      response = await fetch(`http://127.0.0.1:8000/api/accounts/${account.id}/addresses/`, {
+      response = await api.post(`/accounts/${account.id}/addresses/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -157,7 +158,7 @@ const submitAddress = async () => {
       })
     }
 
-    const text = await response.text()
+    const text = await response.data.text()
     let data: any
 
     try {
@@ -166,7 +167,7 @@ const submitAddress = async () => {
       data = { error: text }
     }
 
-    if (!response.ok) {
+    if (!response.status) {
       console.error('Backend error:', data)
       alert(data.error || 'Failed to save address')
       return
