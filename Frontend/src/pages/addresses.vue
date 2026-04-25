@@ -41,7 +41,7 @@ const loadAddresses = async () => {
   try {
     const response = await api.get(`/accounts/${account.value.id}/addresses/`)
     if (response.status) {
-      addresses.value = await response.data.json()
+      addresses.value = await response.data.json
     } else {
       console.error('Failed to load addresses')
     }
@@ -66,6 +66,7 @@ const deleteAddress = async (addressId: number) => {
       method: 'DELETE'
     })
     if (response.status) {
+      
       addresses.value = addresses.value.filter(a => a.id !== addressId)
     } else {
       alert('Failed to delete address')

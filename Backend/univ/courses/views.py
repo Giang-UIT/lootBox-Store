@@ -270,6 +270,7 @@ def address_to_dict(a):
 
 @api_view(['GET', 'POST'])
 def address_list(request, account_id):
+    print(request.data["body"][10])
     try:
         acc = Account.objects.get(id=account_id)
     except Account.DoesNotExist:
