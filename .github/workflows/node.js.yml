@@ -39,7 +39,3 @@ jobs:
       working-directory: ./Frontend
     - run: npm run test:unit
       working-directory: ./Frontend
-    - name: 'notify vercel'
-      uses: 'vercel/repository-dispatch/actions/status@v1'
-      with:
-        name: Vercel - store: CI pass
