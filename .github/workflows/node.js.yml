@@ -7,11 +7,11 @@ on:
   push:
     branches: [ "main" ]
     path: 
-      - 'frontend/**'
+      - 'Frontend/**'
   pull_request:
     branches: [ "main" ]
     path: 
-      - 'frontend/**'
+      - 'Frontend/**'
   
 
 jobs:
