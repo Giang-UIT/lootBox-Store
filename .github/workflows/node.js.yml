@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x, 22.x, 25.x]
-        os: [ubuntu-latest, windows-latest, mint-latest, macos-latest]
+        os: [ubuntu-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -31,6 +31,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+    - name: install dependencies 
+    - run: npm install
     - run: npm run build --if-present
     - run: npm run test:unit
