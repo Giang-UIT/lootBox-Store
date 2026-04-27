@@ -2,11 +2,11 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
     path:
     - 'Backend/**'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
     path:
     - 'Backend/**'
 
