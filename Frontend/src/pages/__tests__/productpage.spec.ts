@@ -184,7 +184,7 @@ describe('ProductPage.vue', () => {
 
     const buttons = wrapper.findAll('.add-to-cart-btn')
 
-    expect(buttons[1].attributes('disabled')).toBeDefined()
+    expect(buttons[1]?.attributes('disabled')).toBeDefined()
   })
 
   //purpose: tests api failure when fetching products
