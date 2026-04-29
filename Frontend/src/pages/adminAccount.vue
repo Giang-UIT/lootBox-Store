@@ -4,6 +4,8 @@
 
 import { ref, onMounted} from 'vue'
 import api from '@/api'
+import { useRouter } from 'vue-router'
+
 
 //Just for testing. If the array is still here, deletes it. 
 const testAccounts: accountInfo[] = [
@@ -17,6 +19,9 @@ const testAccounts: accountInfo[] = [
 const account = ref<accountInfo[]>([]) 
 const AccountInfos = ref<accountInfo[] | any>([])
 const errMsg = ref(``)
+const isEdit = ref<boolean| null>(null)
+const isDelete = ref<boolean| null>(null)
+const router = useRouter()
 
 interface accountInfo { 
     id: number, 
@@ -29,7 +34,11 @@ interface accountInfo {
 
 
 //This takes an account id, searches the account array to find the right object and returns it
-const displayingDetails = (id: number) => AccountInfos.value = account.value.find(a => a.id === id) ?? null
+//Also reset errMsg so that account details can be shown
+function displayingDetails (id: number){
+  errMsg.value = ''
+  AccountInfos.value = account.value.find(a => a.id === id) ?? null
+}  
 
 /* ==================== HTTP REQUESTS ==================== */
 
@@ -50,20 +59,22 @@ const fetchUser = async () => {
 //Delete method. Takes an account id and send delete request to backend
 //Not sure if this is how it works
 const deleteAccount = async (id:number) => {
+  isDelete.value = null
   try { 
-    const response = await api.delete('/deleteUser/')
+
+    const response = await api.delete(`/deleteUser/${id}`)
+    fetchUser()
     console.log(response.status)
     
-  } catch (error){
-    console.log(id)
-    console.log('error')
+  } catch (error: any){
+    errMsg.value = `Could not delete the account with the id of ${id}. Status code: ${error.status}`
   }  
 }
 
 //Put method. Takes an account id and send put request to backend
 //Not sure if this is how it works
 const editAccount = async (id:number) => {
-  try { 
+  try {
     const response = await api.put('/deleteUser/')
     console.log(response.status) 
   } catch (error){
@@ -140,9 +151,10 @@ onMounted(() => {
         
         <!-- adds a container to make the buttons stay in the middle-->
         <v-container class="d-flex justify-center">
-
-            <v-btn rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Delete account</v-btn>
-            <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos?.id)>Edit account</v-btn>
+          <v-btn v-if ="isDelete" rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Confirm</v-btn>
+          <v-btn v-if ="isDelete" rounded="lg" class="ma-2" @click = "isDelete = false">Cancel</v-btn>
+          <v-btn v-else rounded="lg" class="ma-2" @click = "isDelete = true">Delete account</v-btn>
+          <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos?.id)>Edit account</v-btn>
         </v-container>
 
     </v-container>

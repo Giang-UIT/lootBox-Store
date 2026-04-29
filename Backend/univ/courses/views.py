@@ -34,9 +34,6 @@ from . import account as account_service
 from rest_framework.response import Response
 from rest_framework.decorators import api_view  
 
-#data oject will be data from the database. 
-data = {"U1" : "asd@example.com", "U2": "asd2@example.com"}
-
 def index(request):
     return HttpResponse("courses index page")
 
@@ -51,23 +48,34 @@ def render_html(request) :
 @api_view(['GET'])
 def get_user_data(request):
     try: 
-        accounts = account_service.get_all_accounts()
-        account_list = [account_service.account_to_dict(acc) for acc in accounts]
+        #Get all accounts from table
+        accounts = account_service.get_all_accounts() 
+        
+        #Put account object values into a dictionary and adds it to a list 
+        account_list = [account_service.account_to_dict(acc) for acc in accounts] 
         return Response({"accounts": account_list}, status=status.HTTP_200_OK)
     except: 
         return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
+#Deleting an account with a given account id
 @api_view(['DELETE'])
-def delete_user_data(request):
-    data.popitem()
+def delete_user_data(request, account_id):
     
-    return HttpResponse("an account has been removed")
+    try:
+        accExist = account_service.delete_account(account_id)
+        if accExist:
+            return Response("Successfully deleted the requested account", status=status.HTTP_200_OK)
+        else: 
+            return Response("No content for the requested account", status=status.HTTP_204_NO_CONTENT)
+    except:
+        
+        return Response("error could not delete the requested account", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def post_user_data(request):
     
-    return Response(data)
-    return render(request, 'index.html', context) # <----- pass the "context" to the index.html file
+    
+    return 
 
 @api_view(['POST'])
 def signup(request):
