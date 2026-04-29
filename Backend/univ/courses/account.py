@@ -97,3 +97,15 @@ def validate_session(token):
 def delete_session(token):
     #Log out — delete the session
     Session.objects.filter(token=token).delete()
+    
+
+
+def account_to_dict(acc): 
+    return {
+        "id": acc.id,
+        "name": acc.name, 
+        "password": " ",
+        "email": acc.email,
+        "admin_status": acc.admin_status,
+        "time_created": acc.time_created
+        }

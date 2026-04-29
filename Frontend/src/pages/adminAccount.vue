@@ -14,8 +14,9 @@ const testAccounts: accountInfo[] = [
 
 //account array where each index is an object. Think of object as a python dictionary that can also store functions
 //replace testAccounts with an empty array (i.e []) after removing testAccounts 
-const account = ref<accountInfo[]>(testAccounts) 
-const AccountInfos = <accountInfo | any>ref(null)
+const account = ref<accountInfo[]>([]) 
+const AccountInfos = ref<accountInfo[] | any>([])
+const errMsg = ref(``)
 
 interface accountInfo { 
     id: number, 
@@ -25,6 +26,7 @@ interface accountInfo {
     admin_status: boolean, 
     time_created: string //what is the "timedate" equivalent for TS?
 }
+
 
 //This takes an account id, searches the account array to find the right object and returns it
 const displayingDetails = (id: number) => AccountInfos.value = account.value.find(a => a.id === id) ?? null
@@ -37,10 +39,10 @@ const fetchUser = async () => {
   try { 
     const response = await api.get('/getUser/')
     
-    account.value = response.data
+    account.value = response.data.accounts
   
-  } catch (error){
-    console.log('error')
+  } catch (error: any){
+    errMsg.value = `an error has occured. Status code: ${error.status}`
   }
 }
 
@@ -122,13 +124,16 @@ onMounted(() => {
         <v-divider vertical class="border-opacity-100"></v-divider>
         
             <v-col>
-                <v-card height="320">
+                <v-card v-if = "!errMsg" height="320">
                     <!-- the texts are binded to "AccountInfos"-->
                     <v-card-text >Email: {{ AccountInfos?.email }} </v-card-text>
                     <v-card-text >name: {{ AccountInfos?.name }} </v-card-text>
                     <v-card-text >status: {{ AccountInfos?.admin_status }} </v-card-text>
                     <v-card-text >created date: {{ AccountInfos?.time_created }} </v-card-text>
                                         
+                </v-card>
+                <v-card v-else>
+                  <v-card-text>{{ errMsg }}</v-card-text>
                 </v-card>
             </v-col>
         </v-row>

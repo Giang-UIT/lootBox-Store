@@ -27,6 +27,9 @@ from .cart import (
 
 from . import product as product_service
 
+from . import account as account_service
+
+
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view  
@@ -44,15 +47,20 @@ def render_html(request) :
     return render(request, 'index.html', context) # <----- pass the "context" to the index.html file
 
 
+#Returns every account in the table
 @api_view(['GET'])
 def get_user_data(request):
-    
-    return Response(data)
+    try: 
+        accounts = account_service.get_all_accounts()
+        account_list = [account_service.account_to_dict(acc) for acc in accounts]
+        return Response({"accounts": account_list}, status=status.HTTP_200_OK)
+    except: 
+        return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 def delete_user_data(request):
     data.popitem()
-        
+    
     return HttpResponse("an account has been removed")
 
 @api_view(['POST'])
