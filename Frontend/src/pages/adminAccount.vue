@@ -137,10 +137,15 @@ onMounted(() => {
             <v-col>
                 <v-card v-if = "!errMsg" height="320">
                     <!-- the texts are binded to "AccountInfos"-->
-                    <v-card-text >Email: {{ AccountInfos?.email }} </v-card-text>
-                    <v-card-text >name: {{ AccountInfos?.name }} </v-card-text>
-                    <v-card-text >status: {{ AccountInfos?.admin_status }} </v-card-text>
-                    <v-card-text >created date: {{ AccountInfos?.time_created }} </v-card-text>
+                    <v-card-text>
+                      <v-text-field v-model = "AccountInfos.email" label = "Email" variant= "underlined"></v-text-field>
+                      <v-text-field v-model = "AccountInfos.password" label = "Password" variant= "underlined"></v-text-field>
+                      <v-text-field v-model = "AccountInfos.name" label = "Name" variant= "underlined"></v-text-field>
+                    </v-card-text>
+                    
+                    <v-card-text >admin status: {{ AccountInfos?.admin_status }} </v-card-text>
+                    
+                    
                                         
                 </v-card>
                 <v-card v-else>
