@@ -76,10 +76,12 @@ def edit_account(request):
     
     acc_detail = request.data
 
-    try: 
+
+    try:
+        hash_psw = make_password(acc_detail["password"]) 
         account_service.update_account_name(acc_detail["id"], acc_detail["name"]) 
         account_service.update_account_email(acc_detail["id"], acc_detail["email"])
-        #account_service.update_account_password(request.data["id"], request.data["password"])
+        account_service.update_account_password(request.data["id"], hash_psw)
         return Response("Successfully edited the requested account", status=status.HTTP_200_OK)
     except: 
         return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
@@ -106,6 +108,7 @@ def signup(request):
 
 @api_view(['POST'])
 def login_view(request):
+
     #POST login - authenticate and return a session token
     email = request.data.get("email")
     password = request.data.get("password")
