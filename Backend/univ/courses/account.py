@@ -104,7 +104,7 @@ def account_to_dict(acc):
     return {
         "id": acc.id,
         "name": acc.name, 
-        "password": " ",
+        "password": "",
         "email": acc.email,
         "admin_status": acc.admin_status,
         "time_created": acc.time_created

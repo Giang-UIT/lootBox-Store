@@ -70,7 +70,12 @@ const deleteAccount = async (id:number) => {
 
 //Put method. Takes an account id and send put request to backend
 const editAccount = async (account:any) => {
-  
+  console.log(account)
+  if (!account.password || !account.email || !account.name) {
+    msg.value = "name, email or password cannot be empy!"
+    return
+  }
+
   try {
     const response = await api.put('/editAccount/', account)
     console.log(response.status) 

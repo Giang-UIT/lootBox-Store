@@ -57,7 +57,7 @@ def get_user_data(request):
     except: 
         return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
-#Deleting an account with a given account id
+#Delete an account with a given account id
 @api_view(['DELETE'])
 def delete_user_data(request, account_id):
     
@@ -71,17 +71,26 @@ def delete_user_data(request, account_id):
         
         return Response({"error": "Could not find the requested account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
+
+#Edit user account 
 @api_view(['PUT'])
 def edit_account(request):
     
     acc_detail = request.data
-
-
+    
     try:
-        hash_psw = make_password(acc_detail["password"]) 
+
+        #Checks if password is empty or not
+        if acc_detail.get("password"): 
+            hash_psw = make_password(acc_detail["password"])
+            account_service.update_account_password(request.data["id"], hash_psw)
+            
+        else: 
+            return Response({"error": "Could not edit password. The given password is empty."},status=status.HTTP_404_BAD_REQUEST)
+        
         account_service.update_account_name(acc_detail["id"], acc_detail["name"]) 
         account_service.update_account_email(acc_detail["id"], acc_detail["email"])
-        account_service.update_account_password(request.data["id"], hash_psw)
+        
         return Response("Successfully edited the requested account", status=status.HTTP_200_OK)
     except: 
         return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
@@ -113,6 +122,7 @@ def login_view(request):
     email = request.data.get("email")
     password = request.data.get("password")
 
+    
     #Sanity check for email and password in request
     if not email or not password:
         return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
