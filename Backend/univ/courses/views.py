@@ -69,13 +69,20 @@ def delete_user_data(request, account_id):
             return Response("No content for the requested account", status=status.HTTP_204_NO_CONTENT)
     except:
         
-        return Response("error could not delete the requested account", status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Could not find the requested account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def post_user_data(request):
+@api_view(['PUT'])
+def edit_account(request):
     
-    
-    return 
+    acc_detail = request.data
+
+    try: 
+        account_service.update_account_name(acc_detail["id"], acc_detail["name"]) 
+        account_service.update_account_email(acc_detail["id"], acc_detail["email"])
+        #account_service.update_account_password(request.data["id"], request.data["password"])
+        return Response("Successfully edited the requested account", status=status.HTTP_200_OK)
+    except: 
+        return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def signup(request):

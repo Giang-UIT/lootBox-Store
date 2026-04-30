@@ -73,9 +73,11 @@ const deleteAccount = async (id:number) => {
 
 //Put method. Takes an account id and send put request to backend
 //Not sure if this is how it works
-const editAccount = async (id:number) => {
+const editAccount = async (account:any) => {
+  console.log(typeof(account))
+  
   try {
-    const response = await api.put('/deleteUser/')
+    const response = await api.put('/editAccount/', account)
     console.log(response.status) 
   } catch (error){
     console.log('error')
@@ -159,7 +161,7 @@ onMounted(() => {
           <v-btn v-if ="isDelete" rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Confirm</v-btn>
           <v-btn v-if ="isDelete" rounded="lg" class="ma-2" @click = "isDelete = false">Cancel</v-btn>
           <v-btn v-else rounded="lg" class="ma-2" @click = "isDelete = true">Delete account</v-btn>
-          <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos?.id)>Edit account</v-btn>
+          <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos)>Edit account</v-btn>
         </v-container>
 
     </v-container>
