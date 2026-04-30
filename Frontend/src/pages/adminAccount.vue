@@ -18,10 +18,8 @@ const testAccounts: accountInfo[] = [
 //replace testAccounts with an empty array (i.e []) after removing testAccounts 
 const account = ref<accountInfo[]>([]) 
 const AccountInfos = ref<accountInfo[] | any>([])
-const errMsg = ref(``)
-const isEdit = ref<boolean| null>(null)
+const msg = ref(``)
 const isDelete = ref<boolean| null>(null)
-const router = useRouter()
 
 interface accountInfo { 
     id: number, 
@@ -36,7 +34,7 @@ interface accountInfo {
 //This takes an account id, searches the account array to find the right object and returns it
 //Also reset errMsg so that account details can be shown
 function displayingDetails (id: number){
-  errMsg.value = ''
+  msg.value = ''
   AccountInfos.value = account.value.find(a => a.id === id) ?? null
 }  
 
@@ -51,7 +49,7 @@ const fetchUser = async () => {
     account.value = response.data.accounts
   
   } catch (error: any){
-    errMsg.value = `an error has occured. Status code: ${error.status}`
+    msg.value = `an error has occured. Status code: ${error.status}`
   }
 }
 
@@ -64,9 +62,9 @@ const deleteAccount = async (id:number) => {
     const response = await api.delete(`/deleteUser/${id}`)
     fetchUser()
     console.log(response.status)
-    
+    msg.value = "The account is successfully deleted"
   } catch (error: any){
-    errMsg.value = `Could not delete the account with the id of ${id}. Status code: ${error.status}`
+    msg.value = `Could not delete the account with the id of ${id}. Status code: ${error.status}`
   }  
 }
 
@@ -76,8 +74,9 @@ const editAccount = async (account:any) => {
   try {
     const response = await api.put('/editAccount/', account)
     console.log(response.status) 
+    msg.value = "The account is successfully edited"
   } catch (error: any){
-    errMsg.value = "Could not edit the account with the id of" + account.id + "Status code: " + error.status
+    msg.value = "Could not edit the account with the id of" + account.id + "Status code: " + error.status
   }  
 }
 
@@ -134,7 +133,7 @@ onMounted(() => {
         <v-divider vertical class="border-opacity-100"></v-divider>
         
             <v-col>
-                <v-card v-if = "!errMsg" height="320">
+                <v-card v-if = "!msg" height="320">
                     <!-- the texts are binded to "AccountInfos"-->
                     <v-card-text>
                       <v-text-field v-model = "AccountInfos.email" label = "Email" variant= "underlined"></v-text-field>
@@ -148,7 +147,7 @@ onMounted(() => {
                                         
                 </v-card>
                 <v-card v-else>
-                  <v-card-text>{{ errMsg }}</v-card-text>
+                  <v-card-text>{{ msg }}</v-card-text>
                 </v-card>
             </v-col>
         </v-row>
