@@ -57,7 +57,6 @@ const fetchUser = async () => {
 
 
 //Delete method. Takes an account id and send delete request to backend
-//Not sure if this is how it works
 const deleteAccount = async (id:number) => {
   isDelete.value = null
   try { 
@@ -72,15 +71,13 @@ const deleteAccount = async (id:number) => {
 }
 
 //Put method. Takes an account id and send put request to backend
-//Not sure if this is how it works
 const editAccount = async (account:any) => {
-  console.log(typeof(account))
   
   try {
     const response = await api.put('/editAccount/', account)
     console.log(response.status) 
-  } catch (error){
-    console.log('error')
+  } catch (error: any){
+    errMsg.value = "Could not edit the account with the id of" + account.id + "Status code: " + error.status
   }  
 }
 
@@ -117,7 +114,7 @@ onMounted(() => {
 
                           <template v-slot:default="{ item }">
 
-                            <v-list-item :title = item.email :subtitle= item.id> 
+                            <v-list-item :title = item.email :subtitle="`account id: ${item.id}`"> 
                                 <template v-slot:prepend> 
                                     <v-icon>mdi-account</v-icon>
                                 </template>
