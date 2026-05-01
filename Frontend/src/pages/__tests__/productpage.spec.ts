@@ -126,7 +126,7 @@ describe('ProductPage.vue', () => {
     const wrapper = mountComponent()
     await flushPromises()
 
-    await wrapper.find('button.add-to-cart-button').trigger('click')
+    await wrapper.find('button.add-to-cart-btn').trigger('click')
     await flushPromises()
 
     expect(api.post).not.toHaveBeenCalledWith() //addToCart returns without anything. It's the same as if it did not run. 
