@@ -9,9 +9,7 @@ const products = ref<Product[]>([])
 const loading = ref(true)
 const error = ref('')
 const addingProductId = ref<number | null>(null) // keeps track of which button says "adding..."
-const storedAccount = localStorage.getItem('account')
-const accountId = storedAccount ? JSON.parse(storedAccount).id : null
-
+const accountId = getCurrentUser()?.id 
 const router = useRouter()
 
 // load products when page opens
@@ -52,6 +50,7 @@ async function addToCart(id: number) {
   }
   addingProductId.value = id // trigger loading state on the button we just clicked
   try {
+    console.log(accountId)
     await api.post('/cart/add/', {
       account_id: accountId,
       product_id: id,

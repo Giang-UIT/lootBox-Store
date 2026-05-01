@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import ProductDetail from '../productdetail.vue'
 import api from '../../api'
-import { fa } from 'vuetify/locale'
+import * as auth from '../../utils/auth'
 
 vi.mock('../../api', () => ({
   default: {
@@ -16,6 +16,10 @@ const mockPush = vi.fn()
 vi.mock('vue-router', () => ({
   useRoute: () => ({ params: { id: '42' } }),
   useRouter: () => ({ push: mockPush }),
+}))
+
+vi.mock('../../utils/auth', () => ({
+  getCurrentUser: vi.fn(),
 }))
 
 const mockProduct = {
@@ -40,6 +44,8 @@ const mountComponent = () =>
 describe('ProductDetail', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(window, 'alert').mockImplementation(() => {})
   })
 
   // ── Rendering ──────────────────────────────────────────────────────────────
@@ -125,10 +131,24 @@ describe('ProductDetail', () => {
   })
 
   // ── addToCart ──────────────────────────────────────────────────────────────
+   it('calls api.post with correct payload and undefine id', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: mockProduct }) //ensures that GET request receives the mock product 
+    vi.mocked(api.post).mockResolvedValue({}) //Ensures that POST request receives nothing
+    vi.mocked(auth.getCurrentUser).mockReturnValue({ id: null }) //ensures that the mock function receives null as ID
+    const wrapper = mountComponent()
+    await flushPromises()
+
+    await wrapper.find('button.add-to-cart-button').trigger('click')
+    await flushPromises()
+
+    expect(api.post).not.toHaveBeenCalledWith() //addToCart returns without 
+  })
+
 
   it('calls api.post with correct payload when Add to Cart is clicked', async () => {
-    vi.mocked(api.get).mockResolvedValue({ data: mockProduct })
+    vi.mocked(api.get).mockResolvedValue({ data: mockProduct }) //ensures that GET request receives the mock product 
     vi.mocked(api.post).mockResolvedValue({}) //Ensures that POST request receives nothing
+    vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 } as any) //ensures that the mock function receives that exact ID
     const wrapper = mountComponent()
     await flushPromises()
 

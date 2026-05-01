@@ -116,6 +116,22 @@ describe('ProductPage.vue', () => {
     })
   })
 
+  //purpose: tests unsuccessful add to cart
+  //inputs: logged in user, click button
+  //outputs: api.post returns nothing
+  it('calls api.post with correct payload and undefine id', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: mockProducts }) //ensures that GET request receives the mock product 
+    vi.mocked(api.post).mockResolvedValue({}) //Ensures that POST request receives nothing
+    vi.mocked(auth.getCurrentUser).mockReturnValue({ id: null }) //ensures that the mock function receives null as ID
+    const wrapper = mountComponent()
+    await flushPromises()
+
+    await wrapper.find('button.add-to-cart-btn').trigger('click')
+    await flushPromises()
+
+    expect(api.post).not.toHaveBeenCalledWith() //addToCart returns without anything. It's the same as if it did not run. 
+  })
+
   //purpose: verifies loading state during add to cart
   //inputs: delayed api response
   //outputs: button shows "Adding..."
@@ -168,7 +184,7 @@ describe('ProductPage.vue', () => {
 
     const buttons = wrapper.findAll('.add-to-cart-btn')
 
-    expect(buttons[1].attributes('disabled')).toBeDefined()
+    expect(buttons[1]?.attributes('disabled')).toBeDefined()
   })
 
   //purpose: tests api failure when fetching products
