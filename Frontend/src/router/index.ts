@@ -12,7 +12,8 @@ import Cart from '../components/Cart.vue'
 import Account from '@/pages/index.vue'
 import ProductManagement from '../components/ProductManagement.vue'
 import ProductDetail from '../pages/productdetail.vue'
-import addresspage from '@/pages/addresspage.vue'
+import addresspage from '../pages/addresspage.vue'
+import addresses from '@/pages/addresses.vue'
 import adminAccount from '@/pages/adminAccount.vue'
 import Login from '@/pages/Login.vue'
 import CreateAccount from '@/pages/CreateAccount.vue'
@@ -32,6 +33,8 @@ const router = createRouter({
        component: ProductDetail },
     { path: '/address',
        component: addresspage },
+    { path: '/addresses',
+       component: addresses },
    { path: '/adminAccount',
       component: adminAccount },
     { path: '/login', 

@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from "vue"
 import { useRouter } from 'vue-router'
 import api from '../api'
+import { getCurrentUser } from '../utils/auth.ts'
 
 interface CartItemType {
   product_id: number
@@ -11,13 +12,23 @@ interface CartItemType {
   image?: string
 }
 
+// state stuff
 const cart = ref<CartItemType[]>([])
-const accountId = 1 // FOR TESTING
+const storedAccount = localStorage.getItem('account')
+const accountId = storedAccount ? JSON.parse(storedAccount).id : null
 const router = useRouter()
 const errorMsg = ref<string | null>('')
 
+// grabs the cart data for the logged in user
+// inputs: none
+// outputs: updates the cart array with items from the db
 async function fetchCart() {
   try {
+    // stop if nobody is logged in
+    if (!accountId) {
+      console.error("No user logged in")
+      return
+    }
     const { data } = await api.get(`/cart/${accountId}/`)
     if (data.items) {
       cart.value = data.items
@@ -33,12 +44,17 @@ async function fetchCart() {
   }
 }
 
+// load cart on mount
 onMounted(() => {
   fetchCart()
 })
 
+// changes the amount of an item in the cart
+// inputs: id (product id), currentQuantity (amount in cart), change (+1 or -1)
+// outputs: api call to add/decrease, then refreshes the cart
 async function updateQuantity(id: number, currentQuantity: number, change: number) {
   const newQuantity = currentQuantity + change
+  // if it drops to 0 or below, just remove the item
   if (newQuantity <= 0) {
     removeItem(id)
     return
@@ -52,6 +68,9 @@ async function updateQuantity(id: number, currentQuantity: number, change: numbe
   }
 }
 
+// completely deletes an item from the cart
+// inputs: id (product id)
+// outputs: api call to remove item, then refreshes the cart
 async function removeItem(id: number) {
   try {
     await api.post('/cart/remove/', { account_id: accountId, product_id: id })
@@ -63,6 +82,9 @@ async function removeItem(id: number) {
   }
 }
 
+// handles the checkout process
+// inputs: none
+// outputs: sends post request to checkout, shows alert, refreshes cart
 async function checkout() {
   try {
     await api.post('/cart/checkout/', { account_id: accountId })
@@ -75,6 +97,7 @@ async function checkout() {
   }
 }
 
+// auto calculates the total price of everything in the cart
 const total = computed(() =>
   cart.value.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0)
 )

@@ -127,7 +127,6 @@ onMounted(() => {
         
         <!-- this divider adds the vertical line between the sections -->
         <v-divider vertical class="border-opacity-100"></v-divider>
-
         
             <v-col>
                 <v-card v-if ="!errMsg" height="320">

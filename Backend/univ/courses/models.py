@@ -57,7 +57,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.RESTRICT)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     item_quantity = models.PositiveIntegerField(default=1)
     
     class Meta:
@@ -67,12 +67,13 @@ class CartItem(models.Model):
 
 class Address(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    line1 = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20, null=False, blank=False)
+    line1 = models.CharField(max_length=255, null=False, blank=False)
     line2 = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=20)
-    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100, null=False, blank=False)
+    state = models.CharField(max_length=100, null=False, blank=False)
+    postal_code = models.CharField(max_length=20, null=False, blank=False)
+    country = models.CharField(max_length=100, null=False, blank=False)
 
     def __str__(self):
         return f"{self.line1}, {self.city}, {self.country}"

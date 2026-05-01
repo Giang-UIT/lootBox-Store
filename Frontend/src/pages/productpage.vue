@@ -2,13 +2,15 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api'
+import { getCurrentUser } from '../utils/auth.ts'
 
 // state stuff
 const products = ref<Product[]>([])
 const loading = ref(true)
 const error = ref('')
 const addingProductId = ref<number | null>(null) // keeps track of which button says "adding..."
-const accountId = 1 // hardcoded for testing, change later
+const storedAccount = localStorage.getItem('account')
+const accountId = storedAccount ? JSON.parse(storedAccount).id : null
 
 const router = useRouter()
 
@@ -25,11 +27,13 @@ interface Product {
   image: string
 }
 
-// get all products from db
+// gets all products from the db
+// inputs: none
+// outputs: fills the products array with data from the product table
 async function fetchProducts() {
   try {
     const { data } = await api.get<Product[]>('/products/')
-    products.value = data
+    products.value = data 
   } catch (e: any) {
     console.log(e.message)
   } finally {
@@ -37,9 +41,16 @@ async function fetchProducts() {
   }
 }
 
-// add item to cart
+// adds a specific item to the cart
+// inputs: id (the product id)
+// outputs: sends a post request to the api, alerts if not logged in
 async function addToCart(id: number) {
-  addingProductId.value = id // trigger loading state on button
+  // check if user is logged in first
+  if (!accountId) {
+    alert("You must be logged in")
+    return
+  }
+  addingProductId.value = id // trigger loading state on the button we just clicked
   try {
     await api.post('/cart/add/', {
       account_id: accountId,
@@ -51,7 +62,7 @@ async function addToCart(id: number) {
     alert("An error has occured while adding product to cart")
     console.log(`Error code: ${error.response.status}`)
   } finally {
-    addingProductId.value = null // reset button
+    addingProductId.value = null // reset button text
   }
 }
 </script>
