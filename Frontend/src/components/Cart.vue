@@ -14,8 +14,7 @@ interface CartItemType {
 
 // state stuff
 const cart = ref<CartItemType[]>([])
-const user = getCurrentUser()
-const accountId = user?.id
+const accountId = getCurrentUser()?.id
 const router = useRouter()
 
 // grabs the cart data for the logged in user
