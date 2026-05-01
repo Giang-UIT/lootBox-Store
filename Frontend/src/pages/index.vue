@@ -8,8 +8,6 @@
         </div>    
     </herobanner>
 
-    
-    
     </div>
 
 </template>

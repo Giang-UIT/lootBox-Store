@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../api'
+import { getCurrentUser } from '../utils/auth.ts'
 
 interface Product {
   id: number
@@ -13,17 +14,25 @@ interface Product {
   image: string
 }
 
+// state stuff
 const route = useRoute()
 const router = useRouter()
 const product = ref<Product | null>(null)
 const addingProductId = ref<number | null>(null)
-const accountId = 1 
+const accountId = getCurrentUser()?.id
 
+
+//adding an item to cart based on product id
 async function addToCart(id: number) {
+  if (!accountId) {
+    alert("You must be logged in")
+    return
+  }
   addingProductId.value = id
+
   try {
     await api.post('/cart/add/', {
-      account_id: accountId,
+      account_id: accountId, //Need to tie account ID of the logged in user account
       product_id: id,
       quantity: 1
     })
@@ -34,16 +43,23 @@ async function addToCart(id: number) {
   }
 }
 
+// fetches the single product based on the url
+// inputs: none (reads the id from the route params)
+// outputs: updates the product ref, routes back to products if it fails
 async function fetchProduct() {
   try {
+    
     const { data } = await api.get(`/products/${route.params.id}/`)
     product.value = data
+
   } catch (error) {
+    //returns to product page
     console.error("Product not found", error)
     router.push('/products')
   }
 }
 
+// grab the product when the page loads
 onMounted(fetchProduct)
 </script>
 
@@ -51,6 +67,7 @@ onMounted(fetchProduct)
   <div v-if="product" class="page-wrapper">
     <div class="card">
       
+    
       <div class="image-container">
         <v-img 
           v-if="product.image" 
@@ -81,6 +98,8 @@ onMounted(fetchProduct)
           :disabled="product.stock <= 0 || addingProductId === product.id"
           @click="addToCart(product.id)" 
         >
+
+        
           <span v-if="addingProductId === product.id">Adding... ⏳</span>
           <span v-else-if="product.stock <= 0">Out of stock ❌</span>
           <span v-else>Add to Cart 🛒</span>

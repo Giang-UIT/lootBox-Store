@@ -63,9 +63,7 @@ const deleteAccount = async (id:number) => {
 const editAccount = async (id:number) => {
   try { 
     const response = await api.put('/deleteUser/')
-    console.log(response.status)
-    
-    
+    console.log(response.status) 
   } catch (error){
     console.log('error')
   }  
@@ -122,7 +120,6 @@ onMounted(() => {
         
         <!-- this divider adds the vertical line between the sections -->
         <v-divider vertical class="border-opacity-100"></v-divider>
-
         
             <v-col>
                 <v-card height="320">
