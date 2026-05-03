@@ -19,4 +19,6 @@ urlpatterns = [
     #Products
     path('api/products/', views.product_list, name='product_list'),
     path('api/products/<int:pk>/', views.product_detail, name='product_detail'),
+
+    
 ]

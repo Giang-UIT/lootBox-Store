@@ -81,19 +81,8 @@ async function removeItem(id: number) {
   }
 }
 
-// handles the checkout process
-// inputs: none
-// outputs: sends post request to checkout, shows alert, refreshes cart
-async function checkout() {
-  try {
-    await api.post('/cart/checkout/', { account_id: accountId })
-    alert("Checked out successfully!")
-    fetchCart() 
-  } catch (error: any) {
-    if(error.response.status == 500 || error.response.status == 400) 
-      alert("something went wrong during checkout")
-      console.log(`Error code: ${error.response.status}`)
-  }
+function goToPayment() {
+  router.push('/payment')
 }
 
 // auto calculates the total price of everything in the cart
@@ -197,7 +186,7 @@ const total = computed(() =>
           </div>
 
           <button
-            @click="checkout"
+            @click="goToPayment"
             style="width:100%; padding:16px; background:black; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer;"
             class="checkout-btn"
           >
