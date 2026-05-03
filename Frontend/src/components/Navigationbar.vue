@@ -36,7 +36,13 @@
 
       <!-- added temporarily -->
       <router-link v-if="!account" to="/login">Log in</router-link>
-      <button v-else @click="logout" class="logout-btn">Log out</button>
+      <button
+        v-else
+        @click="handleLogoutClick"
+        :class="['logout-btn', { 'logout-btn-confirm': isLogoutConfirming }]"
+      >
+        {{ isLogoutConfirming ? 'Confirm logout' : 'Log out' }}
+      </button>
     </v-sheet>
   </v-container>
 
@@ -46,7 +52,7 @@
 
 //checks on re-render of nav-bar if user's admin status = true, used in v-if checks on router links to
 //have access control
-import { onMounted, computed, ref, watch} from 'vue'
+import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 import api from '../api'
 import { de, tr } from 'vuetify/locale'
 import { filterItems } from 'vuetify/lib/composables/filter.mjs'
@@ -133,6 +139,37 @@ async function fetchProducts() {
 //this line can be changed to allow access under database population - admin_status === true/false
 const isAdmin = computed(() => account.value?.admin_status === true)
 
+const isLogoutConfirming = ref(false)
+let logoutConfirmTimer: ReturnType<typeof setTimeout> | null = null
+
+const resetLogoutConfirm = () => {
+  isLogoutConfirming.value = false
+  if (logoutConfirmTimer) {
+    clearTimeout(logoutConfirmTimer)
+    logoutConfirmTimer = null
+  }
+}
+
+const handleLogoutClick = async () => {
+  if (!isLogoutConfirming.value) {
+    isLogoutConfirming.value = true
+    logoutConfirmTimer = setTimeout(() => {
+      isLogoutConfirming.value = false
+      logoutConfirmTimer = null
+    }, 3000)
+    return
+  }
+
+  resetLogoutConfirm()
+  await logout()
+}
+
+onBeforeUnmount(() => {
+  if (logoutConfirmTimer) {
+    clearTimeout(logoutConfirmTimer)
+  }
+})
+
 // logout function to clear local storage and redirect to home page
 const logout = async () => {
 const token = localStorage.getItem('token')
@@ -196,6 +233,21 @@ cursor: pointer;
 
 .nav-links button:hover {
 color: #616461;
+}
+.logout-btn {
+  width: 14ch;
+}
+
+.logout-btn-confirm {
+color: #ffffff;
+background-color: #c62828;
+border-radius: 0px;
+width: 14ch;
+}
+
+.logout-btn-confirm:hover {
+color: #ffffff;
+background-color: #b71c1c;
 }
 
 </style>
