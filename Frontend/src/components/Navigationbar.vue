@@ -140,6 +140,8 @@ async function fetchProducts() {
 //this line can be changed to allow access under database population - admin_status === true/false
 const isAdmin = computed(() => account.value?.admin_status === true)
 
+
+// functions to handle the timeout of the confirm logout button
 const isLogoutConfirming = ref(false)
 let logoutConfirmTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -165,6 +167,7 @@ const handleLogoutClick = async () => {
   await logout()
 }
 
+// clears timer on unmount of the page
 onBeforeUnmount(() => {
   if (logoutConfirmTimer) {
     clearTimeout(logoutConfirmTimer)
