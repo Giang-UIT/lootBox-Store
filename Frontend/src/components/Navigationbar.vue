@@ -32,6 +32,7 @@
       <router-link to="/">Products</router-link>
       <router-link v-if="!isAdmin && account" to="/cart">&#128722</router-link>
       <router-link v-if="isAdmin" to="/productmanagement">Product management</router-link>
+      <router-link v-if="isAdmin" to="/adminAccount">Account management</router-link>
       <router-link v-if="!isAdmin && account" to="/addresses">Addresses</router-link>
 
       <!-- added temporarily -->
