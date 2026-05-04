@@ -30,8 +30,8 @@ vi.mock('vue-router', async () => {
 })
 
 const mockCartItems = [
-	{ product_id: 1, name: 'Keyboard', price: '10.00', quantity: 2 },
-	{ product_id: 2, name: 'Mouse', price: '20.00', quantity: 1 },
+	{ product_id: 1, name: 'Loot', price: '10.00', quantity: 2 },
+	{ product_id: 2, name: 'Box', price: '20.00', quantity: 1 },
 ]
 
 const mockAddresses = [
@@ -173,7 +173,7 @@ describe('paymentPage.vue', () => {
 		expect(wrapper.text()).toContain('Thank you for your purchase!')
 		expect(wrapper.text()).toContain('Order Information')
 		expect(wrapper.text()).toContain('Delivery Address')
-		expect(wrapper.text()).toContain('Keyboard x 2')
+		expect(wrapper.text()).toContain('Loot x 2')
 		expect(wrapper.text()).toContain('Total:')
 	})
 
