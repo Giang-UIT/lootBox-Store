@@ -32,6 +32,7 @@
       <router-link to="/">Products</router-link>
       <router-link v-if="!isAdmin && account" to="/cart">&#128722</router-link>
       <router-link v-if="isAdmin" to="/productmanagement">Product management</router-link>
+      <router-link v-if="isAdmin" to="/adminAccount">Account management</router-link>
       <router-link v-if="!isAdmin && account" to="/addresses">Addresses</router-link>
 
       <!-- added temporarily -->
@@ -41,7 +42,6 @@
   </v-container>
 
 </template>
-
 <script setup lang="ts">
 
 //checks on re-render of nav-bar if user's admin status = true, used in v-if checks on router links to
@@ -135,18 +135,19 @@ const isAdmin = computed(() => account.value?.admin_status === true)
 
 // logout function to clear local storage and redirect to home page
 const logout = async () => {
-const token = localStorage.getItem('token')
-if (token) {
-  try {
-    await api.post('/logout/', { token })
-  } catch (e) {
-    console.error('Logout failed', e)
+  const token = localStorage.getItem('token')
+  if (token) {
+    try {
+      await api.post('/logout/', { token })
+    } catch (e) {
+      alert('Logout failed due to an error with bad request')
+    }
   }
 }
 localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
-}
+
 </script>
 
 <style scoped>

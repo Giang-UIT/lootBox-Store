@@ -20,10 +20,16 @@ async function login() {
     localStorage.setItem('token', data.token)
     localStorage.setItem('account', JSON.stringify(data.account))
 
-    msg.value = `Welcome, ${data.account.name}!`
+    //would be cool to add 1ms delay here. Before sending user to home page
+    msg.value = `Welcome, ${data.account.name}!`    
     window.location.href = '/'
   } catch (e: any) {
-    msg.value = e.message
+    if(e.response.status == 400)
+      msg.value = "Need to input email or password to login"
+    else if (e.response.status == 401)
+      msg.value = "Invalid email or password"
+    else if (e.response.status == 500)
+      msg.value = "Could not login account. Error from server side"
   }
 }
 </script>

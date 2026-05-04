@@ -16,6 +16,7 @@ interface CartItemType {
 const cart = ref<CartItemType[]>([])
 const accountId = getCurrentUser()?.id
 const router = useRouter()
+const errorMsg = ref<string | null>('')
 
 // grabs the cart data for the logged in user
 // inputs: none
@@ -33,8 +34,12 @@ async function fetchCart() {
     } else {
       cart.value = []
     }
-  } catch (error) {
-    console.error("Error fetching cart data:", error)
+  } catch (error: any) {
+    console.log(error.response.status)
+    errorMsg.value = error.response.status
+    
+    if(error.response.status == 500 || error.response.status == 400) 
+      errorMsg.value = "Could not access your cart. Please contact customer support"
   }
 }
 
@@ -69,22 +74,15 @@ async function removeItem(id: number) {
   try {
     await api.post('/cart/remove/', { account_id: accountId, product_id: id })
     fetchCart() 
-  } catch (error) {
-    console.error("Error removing item", error)
+  } catch (error: any) {
+    if(error.response.status == 500 || error.response.status == 400) 
+      alert("The product could not be removed from the cart due to bad request. Please contact support")
+      console.log(`Error code: ${error.response.status}`)
   }
 }
 
-// handles the checkout process
-// inputs: none
-// outputs: sends post request to checkout, shows alert, refreshes cart
-async function checkout() {
-  try {
-    await api.post('/cart/checkout/', { account_id: accountId })
-    alert("Checked out successfully!")
-    fetchCart() 
-  } catch (error) {
-    console.error("Error checking out", error)
-  }
+function goToPayment() {
+  router.push('/payment')
 }
 
 // auto calculates the total price of everything in the cart
@@ -105,7 +103,7 @@ const total = computed(() =>
         v-if="cart.length === 0"
         style="text-align:center; padding:60px; color:#666;"
       >
-        Your cart is empty.
+        <p>{{ errorMsg }}</p>
       </div>
 
       <div
@@ -188,7 +186,7 @@ const total = computed(() =>
           </div>
 
           <button
-            @click="checkout"
+            @click="goToPayment"
             style="width:100%; padding:16px; background:black; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer;"
             class="checkout-btn"
           >

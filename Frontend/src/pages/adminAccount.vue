@@ -4,6 +4,8 @@
 
 import { ref, onMounted} from 'vue'
 import api from '@/api'
+import { useRouter } from 'vue-router'
+
 
 //Just for testing. If the array is still here, deletes it. 
 const testAccounts: accountInfo[] = [
@@ -14,8 +16,10 @@ const testAccounts: accountInfo[] = [
 
 //account array where each index is an object. Think of object as a python dictionary that can also store functions
 //replace testAccounts with an empty array (i.e []) after removing testAccounts 
-const account = ref<accountInfo[]>(testAccounts) 
-const AccountInfos = <accountInfo | any>ref(null)
+const account = ref<accountInfo[]>([]) 
+const AccountInfos = ref<accountInfo[] | any>([])
+const msg = ref(``)
+const isDelete = ref<boolean| null>(null)
 
 interface accountInfo { 
     id: number, 
@@ -26,8 +30,13 @@ interface accountInfo {
     time_created: string //what is the "timedate" equivalent for TS?
 }
 
+
 //This takes an account id, searches the account array to find the right object and returns it
-const displayingDetails = (id: number) => AccountInfos.value = account.value.find(a => a.id === id) ?? null
+//Also reset errMsg so that account details can be shown
+function displayingDetails (id: number){
+  msg.value = ''
+  AccountInfos.value = account.value.find(a => a.id === id) ?? null
+}  
 
 /* ==================== HTTP REQUESTS ==================== */
 
@@ -37,35 +46,42 @@ const fetchUser = async () => {
   try { 
     const response = await api.get('/getUser/')
     
-    account.value = response.data
+    account.value = response.data.accounts
   
-  } catch (error){
-    console.log('error')
+  } catch (error: any){
+    msg.value = `an error has occured. Status code: ${error.status}`
   }
 }
 
 
 //Delete method. Takes an account id and send delete request to backend
-//Not sure if this is how it works
 const deleteAccount = async (id:number) => {
+  isDelete.value = null
   try { 
-    const response = await api.delete('/deleteUser/')
+
+    const response = await api.delete(`/deleteUser/${id}`)
+    fetchUser()
     console.log(response.status)
-    
-  } catch (error){
-    console.log(id)
-    console.log('error')
+    msg.value = "The account is successfully deleted"
+  } catch (error: any){
+    msg.value = `Could not delete the account with the id of ${id}. Status code: ${error.status}`
   }  
 }
 
 //Put method. Takes an account id and send put request to backend
-//Not sure if this is how it works
-const editAccount = async (id:number) => {
-  try { 
-    const response = await api.put('/deleteUser/')
+const editAccount = async (account:any) => {
+  console.log(account)
+  if (!account.password || !account.email || !account.name) {
+    msg.value = "name, email or password cannot be empy!"
+    return
+  }
+
+  try {
+    const response = await api.put('/editAccount/', account)
     console.log(response.status) 
-  } catch (error){
-    console.log('error')
+    msg.value = "The account is successfully edited"
+  } catch (error: any){
+    msg.value = "Could not edit the account with the id of" + account.id + "Status code: " + error.status
   }  
 }
 
@@ -102,7 +118,7 @@ onMounted(() => {
 
                           <template v-slot:default="{ item }">
 
-                            <v-list-item :title = item.email :subtitle= item.id> 
+                            <v-list-item :title = item.email :subtitle="`account id: ${item.id}`"> 
                                 <template v-slot:prepend> 
                                     <v-icon>mdi-account</v-icon>
                                 </template>
@@ -122,22 +138,31 @@ onMounted(() => {
         <v-divider vertical class="border-opacity-100"></v-divider>
         
             <v-col>
-                <v-card height="320">
+                <v-card v-if = "!msg" height="320">
                     <!-- the texts are binded to "AccountInfos"-->
-                    <v-card-text >Email: {{ AccountInfos?.email }} </v-card-text>
-                    <v-card-text >name: {{ AccountInfos?.name }} </v-card-text>
-                    <v-card-text >status: {{ AccountInfos?.admin_status }} </v-card-text>
-                    <v-card-text >created date: {{ AccountInfos?.time_created }} </v-card-text>
+                    <v-card-text>
+                      <v-text-field v-model = "AccountInfos.email" label = "Email" variant= "underlined"></v-text-field>
+                      <v-text-field v-model = "AccountInfos.password" label = "Password" variant= "underlined"></v-text-field>
+                      <v-text-field v-model = "AccountInfos.name" label = "Name" variant= "underlined"></v-text-field>
+                    </v-card-text>
+                    
+                    <v-card-text >admin status: {{ AccountInfos?.admin_status }} </v-card-text>
+                    
+                    
                                         
+                </v-card>
+                <v-card v-else>
+                  <v-card-text>{{ msg }}</v-card-text>
                 </v-card>
             </v-col>
         </v-row>
         
         <!-- adds a container to make the buttons stay in the middle-->
         <v-container class="d-flex justify-center">
-
-            <v-btn rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Delete account</v-btn>
-            <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos?.id)>Edit account</v-btn>
+          <v-btn v-if ="isDelete" rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Confirm</v-btn>
+          <v-btn v-if ="isDelete" rounded="lg" class="ma-2" @click = "isDelete = false">Cancel</v-btn>
+          <v-btn v-else rounded="lg" class="ma-2" @click = "isDelete = true">Delete account</v-btn>
+          <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos)>Edit account</v-btn>
         </v-container>
 
     </v-container>
