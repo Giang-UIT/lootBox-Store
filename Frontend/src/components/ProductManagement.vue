@@ -19,6 +19,10 @@ const formImage = ref('')
 // Boolean for checking if a field is edited, used to remove placeholder
 const isEditing = computed(() => selectedProduct.value !== null)
 
+// Booleans for double checks for editing and deletion of products
+const isDelete = ref<boolean| null>(null)
+const isEdit = ref<boolean | null>(null)
+
 // Look up a product by ID
 async function lookupProduct() {
   statusMsg.value = ''
@@ -222,10 +226,15 @@ function resetAll() {
 
     <!-- Action buttons -->
     <div class="actions">
-      <button class="primary" @click="saveProduct">
+      <button v-if="isEdit" class="cancel" @click="isEdit = false">Cancel</button>
+      <button v-if="isEdit" class="primary" @click="isEdit = false; saveProduct()">Confirm</button>
+      <button v-else class="primary" @click="isEdit = true">
         {{ isEditing ? 'Save Changes' : 'Create Product' }}
       </button>
-      <button v-if="isEditing" class="danger" @click="deleteProduct">
+
+      <button v-if="isDelete" class="cancel" @click="isDelete = false">Cancel</button>
+      <button v-if="isDelete" class="danger" @click="isDelete = false; deleteProduct()">Confirm</button>
+      <button v-if="isEditing && !isDelete" class="danger" @click="isDelete = true">
         Delete Product
       </button>
     </div>
@@ -294,6 +303,7 @@ button {
 button:hover { opacity: 0.9; }
 button.secondary { background: #666; }
 button.primary { background: #42b883; }
+button.cancel {background: #0e5ab1;}
 button.danger { background: #e74c3c; }
 
 .error { color: #e74c3c; font-weight: 600; }
