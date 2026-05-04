@@ -1,8 +1,8 @@
 <template>
   
   <v-container class="nav-container">
-    <v-sheet class="logo">
-      <v-text>LootBox Store</v-text>
+    <v-sheet>
+      <router-link to="/" class="logo">LootBox Store</router-link>
     </v-sheet>
 
     <!-- Search bar-->
@@ -42,6 +42,7 @@
   </v-container>
 
 </template>
+
 <script setup lang="ts">
 
 //checks on re-render of nav-bar if user's admin status = true, used in v-if checks on router links to
@@ -135,19 +136,18 @@ const isAdmin = computed(() => account.value?.admin_status === true)
 
 // logout function to clear local storage and redirect to home page
 const logout = async () => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    try {
-      await api.post('/logout/', { token })
-    } catch (e) {
-      alert('Logout failed due to an error with bad request')
-    }
+const token = localStorage.getItem('token')
+if (token) {
+  try {
+    await api.post('/logout/', { token })
+  } catch (e) {
+    console.error('Logout failed', e)
   }
 }
 localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
-
+}
 </script>
 
 <style scoped>
@@ -166,6 +166,14 @@ align-items: center;
 .logo {
 font-size: 20px;
 font-weight: bold;
+text-decoration: none;
+border: none;
+color: inherit;
+}
+
+.logo:hover{
+  color: inherit;
+  text-decoration: none;
 }
 
 .nav-links {
