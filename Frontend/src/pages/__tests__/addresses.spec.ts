@@ -98,9 +98,6 @@ describe('Addresses', () => {
   //purpose: ensures user is redirected to login if no account in localStorage
   //inputs: component mounts with empty localStorage
   //outputs: alert shown and router.push called with /login
-   it('redirects to login when no account is found', async () => {
-    mountComponent()
-    await flushPromises()
   it('redirects to login when no account is found', async () => {
     mountComponent()
     await flushPromises()
@@ -115,8 +112,6 @@ describe('Addresses', () => {
   //purpose: ensures page title and add button are rendered
   //inputs: account in localStorage, component mounts
   //outputs: "My Addresses" title and "Add New Address" button shown on page
-   it('renders page title and add button', async () => {
-    localStorage.setItem('account', JSON.stringify(mockAccount))
   it('renders page title and add button', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
@@ -149,8 +144,6 @@ describe('Addresses', () => {
   //purpose: ensures addresses are rendered correctly after fetch
   //inputs: API returns list of addresses
   //outputs: address details shown in correct format on page
-   it('renders addresses after fetch', async () => {
-    localStorage.setItem('account', JSON.stringify(mockAccount))
   it('renders addresses after fetch', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
