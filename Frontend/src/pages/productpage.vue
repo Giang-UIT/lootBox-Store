@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api'
 import { getCurrentUser } from '../utils/auth.ts'
+import ProductBanner from '../components/ProductBanner.vue'
 
 // state stuff
 const products = ref<Product[]>([])
@@ -66,7 +67,9 @@ async function addToCart(id: number) {
 }
 </script>
 
+
 <template>
+  <ProductBanner />
   <div id="main">
     <v-container class="py-10" style="max-width: 1200px;"> 
       

@@ -183,10 +183,11 @@ const logout = async () => {
       alert('Logout failed due to an error with bad request')
     }
   }
-}
 localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
+}
+
 
 </script>
 
