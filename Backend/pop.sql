@@ -69,8 +69,8 @@ CREATE TABLE IF NOT EXISTS "courses_address" (
 	FOREIGN KEY("account_id") REFERENCES "courses_account"("id") DEFERRABLE INITIALLY DEFERRED,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-INSERT INTO "courses_account" VALUES (2,'admin','pbkdf2_sha256$1200000$afJGICJeKy8Jh42U6KlTSn$RT8qIY3ixXaNUBSFSTZ/CJxi22/7hDRtokif+eqDvzQ=','admin@admin.com',1,'2026-04-23 05:44:22.663584');
-INSERT INTO "courses_account" VALUES (3,'user','pbkdf2_sha256$1200000$s3SagCsxTezuiw1P5Ctcuk$pHhQDVil/e5KXFcKKue9hwGIzOy0rMZ/FqpxGvAbrL4=','user@user.com',0,'2026-04-23 05:47:52.107337');
+INSERT INTO "courses_account" VALUES (1,'admin','pbkdf2_sha256$1200000$afJGICJeKy8Jh42U6KlTSn$RT8qIY3ixXaNUBSFSTZ/CJxi22/7hDRtokif+eqDvzQ=','admin@admin.com',1,'2026-04-23 05:44:22.663584');
+INSERT INTO "courses_account" VALUES (2,'user','pbkdf2_sha256$1200000$s3SagCsxTezuiw1P5Ctcuk$pHhQDVil/e5KXFcKKue9hwGIzOy0rMZ/FqpxGvAbrL4=','user@user.com',0,'2026-04-23 05:47:52.107337');
 INSERT INTO "courses_product" VALUES (1,'Tokyo Neon Box','Caja premium con accesorios de Tokio y snacks raros.',89.99,15,'Japan','2026-03-21 17:26:37.608167','https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800');
 INSERT INTO "courses_product" VALUES (2,'Taste of Italy Box','Pastas italianas auténticas, salsas y postres artesanales.',39.99,30,'Italy','2026-03-21 17:26:37.620098','https://images.unsplash.com/photo-1498579150354-977475b7ea0b?w=800');
 INSERT INTO "courses_product" VALUES (3,'Swiss Alps Chocolate','Los mejores chocolates suizos hechos a mano.',65,40,'Switzerland','2026-03-21 17:26:37.628440','https://images.unsplash.com/photo-1542840410-3092f99611a3?w=800');
