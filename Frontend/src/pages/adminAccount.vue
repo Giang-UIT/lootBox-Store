@@ -20,6 +20,7 @@ const account = ref<accountInfo[]>([])
 const AccountInfos = ref<accountInfo[] | any>([])
 const msg = ref(``)
 const isDelete = ref<boolean| null>(null)
+const isEdit = ref<boolean | null>(null)
 
 interface accountInfo { 
     id: number, 
@@ -162,7 +163,10 @@ onMounted(() => {
           <v-btn v-if ="isDelete" rounded="lg" style="background-color: white; color: red;" class="ma-2" @click = deleteAccount(AccountInfos?.id)>Confirm</v-btn>
           <v-btn v-if ="isDelete" rounded="lg" class="ma-2" @click = "isDelete = false">Cancel</v-btn>
           <v-btn v-else rounded="lg" class="ma-2" @click = "isDelete = true">Delete account</v-btn>
-          <v-btn rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = editAccount(AccountInfos)>Edit account</v-btn>
+          
+          <v-btn v-if ="isEdit" rounded="lg" style="background-color: white; color: green;" class="ma-2" @click = editAccount(AccountInfos)>Confirm</v-btn>
+          <v-btn v-if ="isEdit" rounded="lg" class="ma-2" @click = "isEdit = false">Cancel</v-btn>
+          <v-btn v-else rounded = "lg" style="background-color: white; color: black;" class="ma-2" @click = "isEdit = true">Edit account</v-btn>
         </v-container>
 
     </v-container>
