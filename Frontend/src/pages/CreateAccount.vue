@@ -11,6 +11,12 @@ const router = useRouter()
 
 async function createAccount() {
   msg.value = ''
+
+  if (!name.value.trim() || !email.value.trim() || !password.value.trim()) {
+    msg.value = 'Please fill in all fields before submitting.'
+    return
+  }
+
   try {
     const { data } = await api.post('/signup/', {
       name: name.value,
@@ -24,10 +30,12 @@ async function createAccount() {
 
     await router.push('/login')
   } catch (e: any) {
-    if(e.response.status == 400) 
-      msg.value = "email already exist "
-    else if (e.response.status == 500)
-      msg.value = "Could not create account. Error from server side"
+    if (e.response?.status === 400)
+      msg.value = 'Email already exists.'
+    else if (e.response?.status === 500)
+      msg.value = 'Could not create account. Error from server side.'
+    else
+      msg.value = 'An unexpected error occurred. Please try again.'
   }
 }
 </script>
