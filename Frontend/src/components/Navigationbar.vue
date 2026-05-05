@@ -187,6 +187,7 @@ localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
 }
+}
 
 </script>
 
