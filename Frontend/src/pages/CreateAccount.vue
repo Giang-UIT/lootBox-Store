@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import api from '../api'
+import { useRouter } from 'vue-router'
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const msg = ref('')
+const router = useRouter()
 
 async function createAccount() {
   msg.value = ''
@@ -19,6 +21,8 @@ async function createAccount() {
     name.value = ''
     email.value = ''
     password.value = ''
+
+    await router.push('/login')
   } catch (e: any) {
     if(e.response.status == 400) 
       msg.value = "email already exist "
