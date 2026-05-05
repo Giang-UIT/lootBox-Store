@@ -155,7 +155,7 @@ describe('adminAccount.vue', () => {
 	})
 
 	//purpose: validates edit account frontend checks required fields
-	//inputs: select account, clear one field, click edit account
+	//inputs: select account, clear one field, click edit account, then confirm
 	//outputs: no api.put call and validation message shown
 	it('blocks edit when required fields are empty', async () => {
 		const wrapper = mountComponent()
@@ -172,12 +172,16 @@ describe('adminAccount.vue', () => {
 		await editAccountButton!.trigger('click')
 		await flushPromises()
 
+		const confirmButton = wrapper.findAll('button').find(btn => btn.text() === 'Confirm')
+		await confirmButton!.trigger('click')
+		await flushPromises()
+
 		expect(api.put).not.toHaveBeenCalled()
 		expect(wrapper.text()).toContain('name, email or password cannot be empy!')
 	})
 
 	//purpose: verifies successful account edit request
-	//inputs: select account, modify name, click edit account
+	//inputs: select account, modify name, click edit account, then confirm
 	//outputs: api.put called and success message rendered
 	it('edits account successfully when fields are valid', async () => {
 		const wrapper = mountComponent()
@@ -192,6 +196,10 @@ describe('adminAccount.vue', () => {
 
 		const editAccountButton = wrapper.findAll('button').find(btn => btn.text() === 'Edit account')
 		await editAccountButton!.trigger('click')
+		await flushPromises()
+
+		const confirmButton = wrapper.findAll('button').find(btn => btn.text() === 'Confirm')
+		await confirmButton!.trigger('click')
 		await flushPromises()
 
 		expect(api.put).toHaveBeenCalledWith('/editAccount/', expect.objectContaining({
