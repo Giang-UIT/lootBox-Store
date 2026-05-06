@@ -22,6 +22,14 @@ const mountComponent = () =>
     },
   })
 
+const pushMock = vi.fn()
+
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    push: pushMock,
+  }),
+}))
+
 describe('Cart.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -98,46 +106,22 @@ describe('Cart.vue', () => {
     })
   })
 
-  //purpose: tests checkout flow
+  //purpose: tests navigation to payment page
   //inputs: click checkout button
-  //outputs: api.post called with checkout endpoint
-  it('calls checkout', async () => {
-    vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 })
-    vi.mocked(api.get).mockResolvedValue({
-      data: { items: [{ product_id: 1, price: '10', quantity: 1 }] }
-    })
-    vi.mocked(api.post).mockResolvedValue({})
-
-    const wrapper = mountComponent()
-    await flushPromises()
-
-    await wrapper.find('.checkout-btn').trigger('click')
-
-    expect(api.post).toHaveBeenCalledWith('/cart/checkout/', {
-      account_id: 1
-    })
+  //outputs: router.push called with '/payment'
+  it('navigates to payment page', async () => {
+  vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 })
+  vi.mocked(api.get).mockResolvedValue({
+    data: { items: [{ product_id: 1, price: '10', quantity: 1 }] }
   })
 
-  //purpose: tests error handling during checkout
-  //inputs: api.post rejects
-  //outputs: console.error is called
-  it('handles checkout error', async () => {
-    vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 })
+  const wrapper = mountComponent()
+  await flushPromises()
 
-    vi.mocked(api.get).mockResolvedValue({
-      data: { items: [{ product_id: 1, price: '10', quantity: 1 }] }
-    })
+  await wrapper.find('.checkout-btn').trigger('click')
 
-    vi.mocked(api.post).mockRejectedValue(new Error('fail'))
-
-    const wrapper = mountComponent()
-    await flushPromises()
-
-    await wrapper.find('.checkout-btn').trigger('click')
-    await flushPromises()
-
-    expect(console.error).toHaveBeenCalled()
-  })
+  expect(pushMock).toHaveBeenCalledWith('/payment')
+})
 
   //purpose: prevents fetching cart if no user
   //inputs: null user

@@ -270,6 +270,11 @@ describe('NavigationBar', () => {
     await wrapper.find('.logout-btn').trigger('click')
     await flushPromises()
 
+    expect(wrapper.find('.logout-btn').text()).toBe('Confirm logout')
+
+    await wrapper.find('.logout-btn').trigger('click')
+    await flushPromises()
+
     expect(mockPost).toHaveBeenCalledWith('/logout/', { token: 'fake-token' })
     expect(localStorage.getItem('account')).toBeNull()
     expect(localStorage.getItem('token')).toBeNull()
@@ -302,6 +307,11 @@ describe('NavigationBar', () => {
 
     const wrapper = mountComponent()
     await flushPromises()
+
+    await wrapper.find('.logout-btn').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('.logout-btn').text()).toBe('Confirm logout')
 
     await wrapper.find('.logout-btn').trigger('click')
     await flushPromises()
