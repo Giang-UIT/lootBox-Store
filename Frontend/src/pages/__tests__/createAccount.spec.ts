@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import CreateAccount from '../CreateAccount.vue'
 import api from '../../api'
+import { nextTick } from 'vue'
 
 // Mock the API
 vi.mock('../../api', () => ({
@@ -74,6 +75,7 @@ describe('CreateAccount.vue', () => {
     await emailInput.setValue('john@example.com')
     await passwordInput.setValue('password123')
     await form.trigger('submit.prevent')
+    await nextTick()
 
     expect(api.post).toHaveBeenCalledWith('/signup/', {
       name: 'John Doe',
@@ -91,7 +93,7 @@ describe('CreateAccount.vue', () => {
   //inputs: user fills form and submits with existing email
   //outputs: error message is shown
   it('displays error message on create account failure', async () => {
-    const mockError = new Error('Email already exists')
+    const mockError = { response: { status: 400 } }
     ;(api.post as any).mockRejectedValue(mockError)
 
     const nameInput = wrapper.find('input[type="text"]')
@@ -99,16 +101,17 @@ describe('CreateAccount.vue', () => {
     const passwordInput = wrapper.find('input[type="password"]')
     const form = wrapper.find('form')
 
-    await nameInput.setValue('Jane Doe')
-    await emailInput.setValue('jane@example.com')
+    await nameInput.setValue('John Doe')
+    await emailInput.setValue('john@example.com')
     await passwordInput.setValue('password456')
     await form.trigger('submit.prevent')
+    await nextTick()
 
     expect(api.post).toHaveBeenCalledWith('/signup/', {
-      name: 'Jane Doe',
-      email: 'jane@example.com',
+      name: 'John Doe',
+      email: 'john@example.com',
       password: 'password456',
     })
-    expect(wrapper.find('p').text()).toBe('Email already exists')
+    expect(wrapper.find('p').text()).toBe('Email already exists.')
   })
 })

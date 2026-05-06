@@ -34,8 +34,6 @@ async function createAccount() {
       msg.value = 'Email already exists.'
     else if (e.response?.status === 500)
       msg.value = 'Could not create account. Error from server side.'
-    else
-      msg.value = 'An unexpected error occurred. Please try again.'
   }
 }
 </script>
