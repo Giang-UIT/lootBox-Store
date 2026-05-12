@@ -9,4 +9,3 @@ Date:
 - Creating documentation for meetings.
 - Having frequent daily stand-ups.
 - Avoid using external APIs.
-  

@@ -13,17 +13,10 @@ In the end we decided on this Sprint Backlog:
 | add the payment page  | 2  | Øystein  |
 | fix backend tests  | 3  | Anders  |
 | addresses page  | 3  | Alejandro  |
-| addresses backend   | 3  | Øystein      |
+| addresses backend   | 3  | Øystein       |
 | address choice in cart page   | 3  | Anders  |
 | search bar   | 5  | Giang  |
 | implement tests for the frontend   | 13  | everyone  |
 
-# new methodologies
-
-    we will be implementing nico nico calender in order to track the moods of members when working on the project
-    this is so we can check if people are unhappy with tasks given, or if it reflects wrong estimates on time given to a task.
-
-# goal of the sprint
-    
-    the goal of this sprint is to finish the functionality of our core product, as well as implementing testing for everything
-    
+# Goal of the sprint
+The goal of this sprint is to finish the functionality of our core product, as well as implementing testing for everything.

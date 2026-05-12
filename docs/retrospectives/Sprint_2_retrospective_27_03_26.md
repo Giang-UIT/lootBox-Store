@@ -10,5 +10,3 @@ poor review pacing
 at-home-reviews are of worse quality and are clustered.
 slight dependancy issues at the end of the sprint.
 all members did not stage changes, causes massive merge conflicts which makes the team unsure if we will destroy the program.
-
-
