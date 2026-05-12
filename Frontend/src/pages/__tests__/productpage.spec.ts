@@ -36,6 +36,7 @@ describe('ProductPage.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'log').mockImplementation(() => {})
     vi.spyOn(window, 'alert').mockImplementation(() => {})
   })
 
@@ -158,18 +159,19 @@ describe('ProductPage.vue', () => {
 
   //purpose: tests error handling in add to cart
   //inputs: api.post throws error
-  //outputs: console.error called
+  //outputs: alert shown and console.log called with api error code
   it('handles api error when adding to cart fails', async () => {
     vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 })
     vi.mocked(api.get).mockResolvedValue({ data: mockProducts })
-    vi.mocked(api.post).mockRejectedValue(new Error('fail'))
+    vi.mocked(api.post).mockRejectedValue({ response: { status: 500 } })
 
     const wrapper = mountComponent()
     await flushPromises()
 
     await wrapper.find('.add-to-cart-btn').trigger('click')
 
-    expect(console.error).toHaveBeenCalled()
+    expect(window.alert).toHaveBeenCalledWith('An error has occured while adding product to cart')
+    expect(console.log).toHaveBeenCalledWith('Error code: 500')
   })
 
   //purpose: ensures out of stock button is disabled
@@ -189,7 +191,7 @@ describe('ProductPage.vue', () => {
 
   //purpose: tests api failure when fetching products
   //inputs: api.get rejects
-  //outputs: no crash and no products rendered
+  //outputs: no crash, no products rendered and error is logged
   it('handles api error when fetching products fails', async () => {
     vi.mocked(auth.getCurrentUser).mockReturnValue({ id: 1 })
     vi.mocked(api.get).mockRejectedValue(new Error('fail'))
@@ -198,5 +200,6 @@ describe('ProductPage.vue', () => {
     await flushPromises()
 
     expect(wrapper.findAll('h3').length).toBe(0)
+    expect(console.log).toHaveBeenCalledWith('fail')
   })
 })

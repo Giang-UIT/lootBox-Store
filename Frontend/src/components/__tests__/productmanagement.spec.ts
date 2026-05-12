@@ -52,7 +52,7 @@ describe('ProductManagement.vue', () => {
     const searchInput = wrapper.find('.search-row input')
     await searchInput.setValue('99')
 
-    const loadButton = wrapper.findAll('.search-row button')[0]
+    const loadButton = wrapper.findAll('.search-row button')[0]!
     await loadButton.trigger('click')
     await flushPromises()
 
@@ -71,6 +71,7 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
     
     await wrapper.find('button.primary').trigger('click')
+    await wrapper.find('button.confirm').trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('Name and Price are required')
@@ -85,10 +86,11 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     const inputs = wrapper.findAll('.form input')
-    await inputs[0].setValue('New Box') 
-    await inputs[2].setValue('50.00')   
+    await inputs[0]?.setValue('New Box') 
+    await inputs[2]?.setValue('50.00')   
 
     await wrapper.find('button.primary').trigger('click')
+    await wrapper.find('button.confirm').trigger('click')
     await flushPromises()
 
     expect(api.post).toHaveBeenCalledWith('/products/', {
@@ -115,13 +117,14 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     await wrapper.find('.search-row input').setValue('99')
-    await wrapper.findAll('.search-row button')[0].trigger('click')
+    await wrapper.findAll('.search-row button')[0]?.trigger('click')
     await flushPromises()
 
     const inputs = wrapper.findAll('.form input')
-    await inputs[2].setValue('120.00') 
+    await inputs[2]?.setValue('120.00') 
 
     await wrapper.find('button.primary').trigger('click')
+    await wrapper.find('button.confirm').trigger('click')
     await flushPromises()
 
     expect(api.patch).toHaveBeenCalledWith('/products/99/', {
@@ -143,10 +146,11 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     await wrapper.find('.search-row input').setValue('99')
-    await wrapper.findAll('.search-row button')[0].trigger('click')
+    await wrapper.findAll('.search-row button')[0]?.trigger('click')
     await flushPromises()
 
     await wrapper.find('button.danger').trigger('click')
+    await wrapper.find('button.confirmDelete').trigger('click')
     await flushPromises()
 
     expect(window.confirm).toHaveBeenCalledWith('Delete product #99 "Admin Box"?')
@@ -166,7 +170,7 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     await wrapper.find('.search-row input').setValue('999')
-    await wrapper.findAll('.search-row button')[0].trigger('click')
+    await wrapper.findAll('.search-row button')[0]?.trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('No product with ID 999 found.')
@@ -181,7 +185,7 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
     
     await wrapper.find('.search-row input').setValue('99')
-    await wrapper.findAll('.search-row button')[0].trigger('click')
+    await wrapper.findAll('.search-row button')[0]?.trigger('click')
     await flushPromises()
 
     await wrapper.find('button.secondary').trigger('click')
@@ -200,10 +204,11 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     await wrapper.find('.search-row input').setValue('99')
-    await wrapper.findAll('.search-row button')[0].trigger('click')
+    await wrapper.findAll('.search-row button')[0]?.trigger('click')
     await flushPromises()
 
     await wrapper.find('button.primary').trigger('click')
+    await wrapper.find('button.confirm').trigger('click')
     await flushPromises()
 
     expect(api.patch).not.toHaveBeenCalled()
@@ -219,10 +224,11 @@ describe('ProductManagement.vue', () => {
     const wrapper = mount(ProductManagement)
 
     const inputs = wrapper.findAll('.form input')
-    await inputs[0].setValue('Box')
-    await inputs[2].setValue('10')
+    await inputs[0]?.setValue('Box')
+    await inputs[2]?.setValue('10')
 
     await wrapper.find('button.primary').trigger('click')
+    await wrapper.find('button.confirm').trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('fail')

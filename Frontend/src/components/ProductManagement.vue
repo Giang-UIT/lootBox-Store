@@ -227,13 +227,13 @@ function resetAll() {
     <!-- Action buttons -->
     <div class="actions">
       <button v-if="isEdit" class="cancel" @click="isEdit = false">Cancel</button>
-      <button v-if="isEdit" class="primary" @click="isEdit = false; saveProduct()">Confirm</button>
+      <button v-if="isEdit" class="confirm" @click="isEdit = false; saveProduct()">Confirm</button>
       <button v-else class="primary" @click="isEdit = true">
         {{ isEditing ? 'Save Changes' : 'Create Product' }}
       </button>
 
       <button v-if="isDelete" class="cancel" @click="isDelete = false">Cancel</button>
-      <button v-if="isDelete" class="danger" @click="isDelete = false; deleteProduct()">Confirm</button>
+      <button v-if="isDelete" class="confirmDelete" @click="isDelete = false; deleteProduct()">Confirm</button>
       <button v-if="isEditing && !isDelete" class="danger" @click="isDelete = true">
         Delete Product
       </button>
