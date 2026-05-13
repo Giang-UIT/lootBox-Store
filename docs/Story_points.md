@@ -1,9 +1,9 @@
-# Final chart of the team's story points
+# Team's story points
 
-|  Sprint   |   1    |   2    |   3    |   4    |
-|-----------|--------|--------|--------|--------|
-| Alejandro |   11   |   18   |   22   |   32   |
-| Anders    |    9   |   17   |   24   |   33   |
-| Andrea    |    9   |   18   |   22   |   32   |
-| Giang     |    8   |   18   |   23   |   31   |
-| Øystein   |   11   |   20   |   20   |   31   |
+| Team member | Sprint 1 | Sprint 2 | Sprint 3 | Sprint 4 |  Total   |
+|-------------|----------|----------|----------|----------|----------|
+| Alejandro   |    11    |     7    |     4    |    10    |    32    |
+| Anders      |     9    |     8    |     7    |     9    |    33    |
+| Andrea      |     9    |     9    |     4    |    10    |    32    |
+| Giang       |     8    |    10    |     5    |     8    |    31    |
+| Øystein     |    11    |     9    |     0    |    11    |    31    |
