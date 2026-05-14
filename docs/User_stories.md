@@ -1,23 +1,23 @@
-# user stories
+# User stories
 
-## customer user stories
+## Customer user stories
 
-As Tom, i want to have a web store where i can buy snacks from different countries.
+As a user, I do not want to have to fill up my information every time I make a purchase.
 
-As Emily, i want to have an account so i dont have to write all my information every time.
+As a user, I want to be able to purchase multiple products at a time.
 
-As Miguel, i want to be able to check out and purchase items from the store.
+As a user, I want to navigate between pages so i can go back and forth if i want to buy something more.
 
-As Erik, i want to navigate between pages so i can go back and forth if i want to buy something more.
+As a user, I want to be able to add more or remove items before buying them if i change my mind before checking out.
 
-As Mateo, i want to be able to add more or remove items before buying them if i change my mind before checking out.
+As a user, I want to pick an address before purchasing.
 
-## admin user stories
+## Admin user stories
 
-As the merchant Maria, i want to be able to remove or edit the products im selling, as the supply and contents can change.
+As an admin, I want to be able to remove or edit the products im selling.
 
-As the customer support agent Eline, i want to be able to change or delete customers accounts if they ask me to do so.
+As an admin, I want to be able to change or delete customers accounts.
 
-As the product owner John Code, i want to be able to add or remove the admin rights of the users if their employment status change.
+As an admin, I want to be able to add or remove the admin rights of the users if their employment status change.
 
 
