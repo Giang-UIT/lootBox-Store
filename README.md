@@ -19,7 +19,6 @@ software development project following agile development practices.
 ```
     ├── Backend/          # Django REST API and database
     │   ├── univ/         # Django project and app
-    │   ├── docs/         # Lecture materials
     │   ├── requirements.txt
     │   ├── manage.py
     │   ├── schema.sql
