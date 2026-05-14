@@ -32,17 +32,23 @@ source ~/.virtualenvs/lootbox/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Run migrations:
+3. Go to the univ folder: 
 ```bash
+cd univ/
+```
+
+4. Run migrations:
+```bash
+python manage.py makemigrations
 python manage.py migrate
 ```
 
-4. (Optional) Populate with sample data:
+5. (Optional) Populate with sample data:
 ```bash
-sqlite3 db.sqlite3 < pop.sql
+sqlite3 db.sqlite3 < ../pop.sql
 ```
 
-5. Start the server:
+6. Start the server:
 ```bash
 python manage.py runserver
 ```
@@ -50,8 +56,10 @@ python manage.py runserver
 ## Testing
 
 ```bash
-python manage.py test
+python manage.py test courses/tests
 ```
+
+Make sure you are in the *univ* folder.
 
 ## API endpoints
 

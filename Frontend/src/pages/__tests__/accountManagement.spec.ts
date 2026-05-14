@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import AdminAccount from '../../pages/adminAccount.vue'
+import AdminAccount from '../adminAccount.vue'
 import api from '@/api'
 
 vi.mock('@/api', () => ({
