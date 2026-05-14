@@ -15,7 +15,7 @@ univ/
     │   ├── product.py    # Product service layer
     │   ├── address.py    # Address service layer
     │   ├── tests/        # Backend tests
-    │   └── migrations/   # Database migrations
+    │   └── tests/        # Generated on first run (see setup)
     └── univ/             # Django project settings
 ```
 
