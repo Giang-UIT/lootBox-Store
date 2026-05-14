@@ -15,4 +15,3 @@ Date:
 - We discussed documenting security considerations such as SQL injection prevention and the lack of encryption before payment data submission in the mock payment page.
 - We discussed describing how meetings, sprint planning and agile practices were performed during the project.
 - We discussed presenting unfinished or removed features as possible future improvements.
-- We discussed clarifying that some sprint 3 tasks were moved into sprint 4 due to time limitations.
