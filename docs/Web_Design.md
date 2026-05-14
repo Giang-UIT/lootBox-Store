@@ -3,11 +3,11 @@
 ```mermaid
 
     flowchart TD
-    mp --> pd{products display} & login 
+    mp --> pd(products display) & login 
     pd --> pinf(product information)
     login -->  s(sign up)
-    login & s --> |if logged in| cart
-    login & s --> |if admin| ap(admin page)
+    login --> |if logged in| cart
+    login  --> |if admin| ap(admin page)
     cart --> add(address page)
     ap --> accm(accounts manager) & pman(products manager)
     pman --> edi(product editing)

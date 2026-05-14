@@ -90,6 +90,7 @@ def edit_account(request):
         
         account_service.update_account_name(acc_detail["id"], acc_detail["name"]) 
         account_service.update_account_email(acc_detail["id"], acc_detail["email"])
+        account_service.update_account_admin_status(acc_detail["id"], acc_detail["admin_status"])
         
         return Response("Successfully edited the requested account", status=status.HTTP_200_OK)
     except: 

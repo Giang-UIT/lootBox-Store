@@ -187,6 +187,7 @@ localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
 }
+}
 
 </script>
 
@@ -243,11 +244,11 @@ border: none;
 cursor: pointer;
 }
 
-.nav-links button:hover {
-color: #616461;
-}
+
 .logout-btn {
-  width: 14ch;
+width: 14ch;
+color: #ffffff;
+background-color: #c62828;
 }
 
 .logout-btn-confirm {
@@ -259,7 +260,10 @@ width: 14ch;
 
 .logout-btn-confirm:hover {
 color: #ffffff;
-background-color: #b71c1c;
+}
+
+.nav-links button:hover {
+color: #3b3d3b;
 }
 
 </style>

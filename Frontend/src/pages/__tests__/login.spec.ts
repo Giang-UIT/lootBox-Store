@@ -114,7 +114,11 @@ describe('Login.vue', () => {
   //inputs: user submits invalid credentials, API returns error
   //outputs: error message displayed to user
   it('displays error message on login failure', async () => {
-    const mockError = new Error('Invalid credentials')
+    const mockError = {
+      response: {
+        status: 401,
+      },
+    }
     ;(api.post as any).mockRejectedValue(mockError)
 
     const emailInput = wrapper.find('input[type="email"]')
@@ -129,7 +133,7 @@ describe('Login.vue', () => {
       email: 'wrong@example.com',
       password: 'wrongpassword',
     })
-    expect(wrapper.find('p').text()).toBe('Invalid credentials')
+    expect(wrapper.find('p').text()).toBe('Invalid email or password')
   })
 
   //purpose: tests navigation to create account page

@@ -103,7 +103,8 @@ const total = computed(() =>
         v-if="cart.length === 0"
         style="text-align:center; padding:60px; color:#666;"
       >
-        <p>{{ errorMsg }}</p>
+        <p v-if="!errorMsg">Your cart is empty.</p>
+        <p v-else>{{ errorMsg }}</p>
       </div>
 
       <div

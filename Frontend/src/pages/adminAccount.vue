@@ -145,9 +145,10 @@ onMounted(() => {
                       <v-text-field v-model = "AccountInfos.email" label = "Email" variant= "underlined"></v-text-field>
                       <v-text-field v-model = "AccountInfos.password" label = "Password" variant= "underlined"></v-text-field>
                       <v-text-field v-model = "AccountInfos.name" label = "Name" variant= "underlined"></v-text-field>
+                      <v-checkbox v-model="AccountInfos.admin_status" label="Admin Status"></v-checkbox>
                     </v-card-text>
                     
-                    <v-card-text >admin status: {{ AccountInfos?.admin_status }} </v-card-text>
+                    <v-card-text >Admin Status: {{ AccountInfos?.admin_status ? 1 : 0 }} </v-card-text>
                     
                     
                                         
