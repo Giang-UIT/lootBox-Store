@@ -52,7 +52,10 @@ software development project following agile development practices.
 ### Backend
 
 1. Create and activate a virtual environment:
+
 For Windows:
+
+Make sure the virtual environment is started on at least the required python version.
 ```bash
 python3 -m venv .venv
 .venv\Scripts\activate
@@ -139,8 +142,8 @@ npm run test:unit
 ### Backend
 
 ```bash
-cd Backend
-python manage.py test
+cd Backend/univ
+python manage.py test courses/tests
 ```
 
 ## Documentation

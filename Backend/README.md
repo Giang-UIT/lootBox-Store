@@ -22,6 +22,7 @@ univ/
 ## Setup
 
 1. Create and activate a virtual environment:
+
 For Windows:
 ```bash
 python3 -m venv .venv
