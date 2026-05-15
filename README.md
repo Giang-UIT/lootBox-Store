@@ -17,20 +17,20 @@ software development project following agile development practices.
 ## Project structure
 
 ```
-    ├── Backend/          # Django REST API and database
-    │   ├── univ/         # Django project and app
-    │   ├── requirements.txt
-    │   ├── manage.py
-    │   ├── schema.sql
-    │   └── pop.sql       # Database population script
-    ├── Frontend/         # Vue.js + Vuetify frontend
+    ├── Backend/                # Django REST API and database
+    │   ├── univ/               # Django project and app
+    │   │   ├── requirements.txt
+    │   │   ├── manage.py
+    │   │   └── populate.py     # Database population script
+    │   └── schema.sql
+    ├── Frontend/               # Vue.js + Vuetify frontend
     │   ├── src/
     │   │   ├── components/
     │   │   ├── pages/
     │   │   ├── utils/
     │   │   └── api.ts
     │   └── package.json
-    └── docs/             # Project documentation
+    └── docs/                   # Project documentation
         ├── meetings/
         ├── plannings/
         ├── retrospectives/
@@ -52,14 +52,21 @@ software development project following agile development practices.
 ### Backend
 
 1. Create and activate a virtual environment:
+For Windows:
 ```bash
-python3 -m venv ~/.virtualenvs/lootbox
-source ~/.virtualenvs/lootbox/bin/activate
+python3 -m venv .venv
+.venv\Scripts\activate
+```
+
+For Linux:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 2. Install dependencies:
 ```bash
-cd Backend
+cd Backend/univ
 pip install -r requirements.txt
 ```
 
@@ -70,9 +77,15 @@ python manage.py migrate
 ```
 
 4. (Optional) Populate the database with sample data:
+
+Important to note that the database must be empty first which can be done by running:
 ```bash
-sqlite3 db.sqlite3 < pop.sql
+python manage.py flush
 ```
+```bash
+python populate.py
+```
+
 
 5. Start the development server:
 ```bash
@@ -100,6 +113,19 @@ The frontend will be available at `http://localhost:5173`.
 
 Both the backend and frontend servers must be running at the same time 
 for the application to work. Open two terminals and run one in each.
+
+If the database has been populated with populate.py the login info for the testing accounts is:
+- Normal user
+
+Email: user@user.com
+
+Password: user
+
+- Admin user
+
+Email: admin@admin.com 
+
+Password: admin
 
 ## Testing
 

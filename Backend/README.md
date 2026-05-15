@@ -22,33 +22,42 @@ univ/
 ## Setup
 
 1. Create and activate a virtual environment:
+For Windows:
 ```bash
-python3 -m venv ~/.virtualenvs/lootbox
-source ~/.virtualenvs/lootbox/bin/activate
+python3 -m venv .venv
+.venv\Scripts\activate
+```
+
+For Linux:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 2. Install dependencies:
 ```bash
+cd Backend/univ
 pip install -r requirements.txt
 ```
 
-3. Go to the univ folder: 
-```bash
-cd univ/
-```
-
-4. Run migrations:
+3. Run database migrations:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-5. (Optional) Populate with sample data:
+4. (Optional) Populate the database with sample data:
+
+Important to note that the database must be empty first which can be done by running:
 ```bash
-sqlite3 db.sqlite3 < ../pop.sql
+python manage.py flush
+```
+```bash
+python populate.py
 ```
 
-6. Start the server:
+
+5. Start the development server:
 ```bash
 python manage.py runserver
 ```
