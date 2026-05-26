@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from "vue"
 import { useRouter } from 'vue-router'
 import api from '../api'
+import { getCurrentUser } from '../utils/auth.ts'
 
 interface CartItemType {
   product_id: number
@@ -11,29 +12,48 @@ interface CartItemType {
   image?: string
 }
 
+// state stuff
 const cart = ref<CartItemType[]>([])
-const accountId = 1 // FOR TESTING
+const accountId = getCurrentUser()?.id
 const router = useRouter()
+const errorMsg = ref<string | null>('')
 
+// grabs the cart data for the logged in user
+// inputs: none
+// outputs: updates the cart array with items from the db
 async function fetchCart() {
   try {
+    // stop if nobody is logged in
+    if (!accountId) {
+      console.error("No user logged in")
+      return
+    }
     const { data } = await api.get(`/cart/${accountId}/`)
     if (data.items) {
       cart.value = data.items
     } else {
       cart.value = []
     }
-  } catch (error) {
-    console.error("Error fetching cart data:", error)
+  } catch (error: any) {
+    console.log(error.response.status)
+    errorMsg.value = error.response.status
+    
+    if(error.response.status == 500 || error.response.status == 400) 
+      errorMsg.value = "Could not access your cart. Please contact customer support"
   }
 }
 
+// load cart on mount
 onMounted(() => {
   fetchCart()
 })
 
+// changes the amount of an item in the cart
+// inputs: id (product id), currentQuantity (amount in cart), change (+1 or -1)
+// outputs: api call to add/decrease, then refreshes the cart
 async function updateQuantity(id: number, currentQuantity: number, change: number) {
   const newQuantity = currentQuantity + change
+  // if it drops to 0 or below, just remove the item
   if (newQuantity <= 0) {
     removeItem(id)
     return
@@ -47,25 +67,25 @@ async function updateQuantity(id: number, currentQuantity: number, change: numbe
   }
 }
 
+// completely deletes an item from the cart
+// inputs: id (product id)
+// outputs: api call to remove item, then refreshes the cart
 async function removeItem(id: number) {
   try {
     await api.post('/cart/remove/', { account_id: accountId, product_id: id })
     fetchCart() 
-  } catch (error) {
-    console.error("Error removing item", error)
+  } catch (error: any) {
+    if(error.response.status == 500 || error.response.status == 400) 
+      alert("The product could not be removed from the cart due to bad request. Please contact support")
+      console.log(`Error code: ${error.response.status}`)
   }
 }
 
-async function checkout() {
-  try {
-    await api.post('/cart/checkout/', { account_id: accountId })
-    alert("Checked out successfully!")
-    fetchCart() 
-  } catch (error) {
-    console.error("Error checking out", error)
-  }
+function goToPayment() {
+  router.push('/payment')
 }
 
+// auto calculates the total price of everything in the cart
 const total = computed(() =>
   cart.value.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0)
 )
@@ -83,7 +103,8 @@ const total = computed(() =>
         v-if="cart.length === 0"
         style="text-align:center; padding:60px; color:#666;"
       >
-        Your cart is empty.
+        <p v-if="!errorMsg">Your cart is empty.</p>
+        <p v-else>{{ errorMsg }}</p>
       </div>
 
       <div
@@ -166,7 +187,7 @@ const total = computed(() =>
           </div>
 
           <button
-            @click="checkout"
+            @click="goToPayment"
             style="width:100%; padding:16px; background:black; color:white; border:none; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer;"
             class="checkout-btn"
           >

@@ -6,7 +6,6 @@
 
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import Index from '@/pages/index.vue'
 import ProductPage from '../pages/productpage.vue'
 import Cart from '../components/Cart.vue'
 import Account from '@/pages/index.vue'
@@ -17,6 +16,7 @@ import addresses from '@/pages/addresses.vue'
 import adminAccount from '@/pages/adminAccount.vue'
 import Login from '@/pages/Login.vue'
 import CreateAccount from '@/pages/CreateAccount.vue'
+import paymentPage from '@/pages/paymentPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +35,8 @@ const router = createRouter({
        component: addresspage },
     { path: '/addresses',
        component: addresses },
+     { path: '/payment',
+       component: paymentPage },
    { path: '/adminAccount',
       component: adminAccount },
     { path: '/login', 
@@ -49,7 +51,7 @@ const router = createRouter({
 
 // Navigation guard to check for admin access and protected routes
 router.beforeEach((to, from, next) => {
-  const protectedRoutes = ['/cart', '/address', '/account']
+  const protectedRoutes = ['/cart', '/address', '/addresses', '/account', '/payment']
   const adminRoutes = ['/productmanagement', '/adminAccount']
   if (protectedRoutes.includes(to.path)) {
     const account = localStorage.getItem('account')

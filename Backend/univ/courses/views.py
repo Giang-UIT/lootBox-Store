@@ -27,12 +27,12 @@ from .cart import (
 
 from . import product as product_service
 
+from . import account as account_service
+
+
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view  
-
-#data oject will be data from the database. 
-data = {"U1" : "asd@example.com", "U2": "asd2@example.com"}
 
 def index(request):
     return HttpResponse("courses index page")
@@ -44,22 +44,57 @@ def render_html(request) :
     return render(request, 'index.html', context) # <----- pass the "context" to the index.html file
 
 
+#Returns every account in the table
 @api_view(['GET'])
 def get_user_data(request):
-    
-    return Response(data)
-
-@api_view(['DELETE'])
-def delete_user_data(request):
-    data.popitem()
+    try: 
+        #Get all accounts from table
+        accounts = account_service.get_all_accounts() 
         
-    return HttpResponse("an account has been removed")
+        #Put account object values into a dictionary and adds it to a list 
+        account_list = [account_service.account_to_dict(acc) for acc in accounts] 
+        return Response({"accounts": account_list}, status=status.HTTP_200_OK)
+    except: 
+        return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def post_user_data(request):
+#Delete an account with a given account id
+@api_view(['DELETE'])
+def delete_user_data(request, account_id):
     
-    return Response(data)
-    return render(request, 'index.html', context) # <----- pass the "context" to the index.html file
+    try:
+        accExist = account_service.delete_account(account_id)
+        if accExist:
+            return Response("Successfully deleted the requested account", status=status.HTTP_200_OK)
+        else: 
+            return Response("No content for the requested account", status=status.HTTP_204_NO_CONTENT)
+    except:
+        
+        return Response({"error": "Could not find the requested account in the table."},status=status.HTTP_400_BAD_REQUEST)
+
+
+#Edit user account 
+@api_view(['PUT'])
+def edit_account(request):
+    
+    acc_detail = request.data
+    
+    try:
+
+        #Checks if password is empty or not
+        if acc_detail.get("password"): 
+            hash_psw = make_password(acc_detail["password"])
+            account_service.update_account_password(request.data["id"], hash_psw)
+            
+        else: 
+            return Response({"error": "Could not edit password. The given password is empty."},status=status.HTTP_404_BAD_REQUEST)
+        
+        account_service.update_account_name(acc_detail["id"], acc_detail["name"]) 
+        account_service.update_account_email(acc_detail["id"], acc_detail["email"])
+        account_service.update_account_admin_status(acc_detail["id"], acc_detail["admin_status"])
+        
+        return Response("Successfully edited the requested account", status=status.HTTP_200_OK)
+    except: 
+        return Response({"error": "Could not find any account in the table."},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def signup(request):
@@ -83,10 +118,12 @@ def signup(request):
 
 @api_view(['POST'])
 def login_view(request):
+
     #POST login - authenticate and return a session token
     email = request.data.get("email")
     password = request.data.get("password")
 
+    
     #Sanity check for email and password in request
     if not email or not password:
         return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)

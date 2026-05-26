@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from courses.views import get_user_data, delete_user_data, post_user_data
+from courses.views import get_user_data, delete_user_data, edit_account
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('courses.urls')),# with out adding a path to the first position. It will take the web browser to the given url.
     path('api/getUser/', get_user_data),
-    path('api/deleteUser/', delete_user_data),
-    path('api/addUser/', post_user_data),
+    path('api/deleteUser/<int:account_id>', delete_user_data),
+    path('api/editAccount/', edit_account),
 ]

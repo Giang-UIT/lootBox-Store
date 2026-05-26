@@ -1,36 +1,176 @@
-# This is suppose to be a temporary README
+# Loot Box Store
+
+A web-based e-commerce platform for purchasing curated boxes of snacks 
+from different countries around the world. Built as part of a university 
+software development project following agile development practices.
+
+## Team
+
+| Name                      | UiT ID    | Github username  |
+|---------------------------|-----------|------------------|
+| Alejandro Rodriguez Perez | alrod7901 | Alesato10        |
+| Anders Sellæg Ellingsen   | anell8161 | Anderssellingsen |
+| Andrea Cárdenas Mayoral   | ancar8714 | ancar8714        |
+| Giang Hoang Nguyen        | gng000    | Giang-UIT        |
+| Øystein Sellæg Ellingsen  | oel016    | Raspaballer      |
+
+## Project structure
+
+```
+    ├── Backend/                # Django REST API and database
+    │   ├── univ/               # Django project and app
+    │   │   ├── requirements.txt
+    │   │   ├── manage.py
+    │   │   └── populate.py     # Database population script
+    │   └── schema.sql
+    ├── Frontend/               # Vue.js + Vuetify frontend
+    │   ├── src/
+    │   │   ├── components/
+    │   │   ├── pages/
+    │   │   ├── utils/
+    │   │   └── api.ts
+    │   └── package.json
+    └── docs/                   # Project documentation
+        ├── meetings/
+        ├── plannings/
+        ├── retrospectives/
+        ├── TA meetings/
+        ├── ConfigManagement.md
+        ├── Web_Design.md
+        ├── Niko_Niko_calendar.md
+        └── Story_points.md
+```
+
+## Requirements
+
+- Python 3.10 or higher
+- Node.js 18 or higher
+- npm
+
+## Setup and installation
+
+### Backend
+
+1. Create and activate a virtual environment:
+
+For Windows:
+
+Make sure the virtual environment is started on at least the required python version.
+```bash
+python3 -m venv .venv
+.venv\Scripts\activate
+```
+
+For Linux:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install dependencies:
+```bash
+cd Backend/univ
+pip install -r requirements.txt
+```
+
+3. Run database migrations:
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+4. (Optional) Populate the database with sample data:
+
+Important to note that the database must be empty first which can be done by running:
+```bash
+python manage.py flush
+```
+```bash
+python populate.py
+```
 
 
-- Delete this if task #54 is completed 
+5. Start the development server:
+```bash
+python manage.py runserver
+```
 
------------------- --------------------
+The backend will be available at `http://127.0.0.1:8000`.
 
-### What are the changes? 
-1) All pages are now moved to src/pages
-2) new plugins have been added. No clues what Pinia and i18n do, but they won't cause any issue. They are there as options to be used if needed. 
+### Frontend
 
-    | plugins|
-    | ----------- | 
-    | Vuetify |
-    | Pinia |
-    | i18n |
+1. Install dependencies:
+```bash
+cd Frontend
+npm install
+```
 
-3) mainpage.vue has been renamed to index.vue and is placed in *"/pages/"*
+2. Start the development server:
+```bash
+npm run dev
+```
 
-4) *Pages* is a new folder that will be storing our web pages. The routing was implemented such that all pages will be searched in the folder
+The frontend will be available at `http://localhost:5173`.
 
-- Higly recommend checking out [routing guide](https://vuejs.org/guide/scaling-up/routing.html)
+### Running the application
 
+Both the backend and frontend servers must be running at the same time 
+for the application to work. Open two terminals and run one in each.
 
---- 
-## *Before running our web application!*
+If the database has been populated with populate.py the login info for the testing accounts is:
+- Normal user
 
-**You have to be in the Frontend folder** to run these commands
+Email: user@user.com
 
-1) npm install update 
-2) npm install axios (just in case)
-3) npm install vuetify (just in case)
-4) npm install i18n (just in case)
-5) npm install pinia (just in case)
+Password: user
 
-I ran into a problem where the mentioned plugins were not installed. You can install them just to be safe. 
+- Admin user
+
+Email: admin@admin.com 
+
+Password: admin
+
+## Testing
+
+### Frontend
+
+```bash
+cd Frontend
+npm run test:unit
+```
+
+### Backend
+
+```bash
+cd Backend/univ
+python manage.py test courses/tests
+```
+
+## Documentation
+
+All project documentation is in the `docs/` folder, including:
+
+- Meeting notes — `docs/meetings/` and `docs/TA meetings/`
+- Sprint planning poker — `docs/plannings/`
+- Sprint retrospectives — `docs/retrospectives/`
+- Web design and page flow — `docs/Web_Design.md`
+- Configuration management guidelines — `docs/ConfigManagement.md`
+- Niko niko calendar — `docs/Niko_Niko_calendar.md`
+- Story points per sprint — `docs/Story_points.md`
+
+## Tech stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Vue.js 3, Vuetify, TypeScript |
+| Backend | Django, Django REST Framework |
+| Database | SQLite |
+| Testing (frontend) | Vitest |
+| Testing (backend) | Django test framework |
+| Version control | GitHub |
+| Project management | GitHub Projects, Jira |
+
+## Acknowledgements
+
+The backend structure is based on the Django template provided by 
+Professor Weihai Yu through the course lecture videos.

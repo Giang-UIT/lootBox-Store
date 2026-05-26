@@ -1,8 +1,8 @@
 <template>
   
   <v-container class="nav-container">
-    <v-sheet class="logo">
-      <v-text>LootBox Store</v-text>
+    <v-sheet>
+      <router-link to="/" class="logo">LootBox Store</router-link>
     </v-sheet>
 
     <!-- Search bar-->
@@ -32,11 +32,18 @@
       <router-link to="/">Products</router-link>
       <router-link v-if="!isAdmin && account" to="/cart">&#128722</router-link>
       <router-link v-if="isAdmin" to="/productmanagement">Product management</router-link>
+      <router-link v-if="isAdmin" to="/adminAccount">Account management</router-link>
       <router-link v-if="!isAdmin && account" to="/addresses">Addresses</router-link>
 
       <!-- added temporarily -->
       <router-link v-if="!account" to="/login">Log in</router-link>
-      <button v-else @click="logout" class="logout-btn">Log out</button>
+      <button
+        v-else
+        @click="handleLogoutClick"
+        :class="['logout-btn', { 'logout-btn-confirm': isLogoutConfirming }]"
+      >
+        {{ isLogoutConfirming ? 'Confirm logout' : 'Log out' }}
+      </button>
     </v-sheet>
   </v-container>
 
@@ -46,7 +53,7 @@
 
 //checks on re-render of nav-bar if user's admin status = true, used in v-if checks on router links to
 //have access control
-import { onMounted, computed, ref, watch} from 'vue'
+import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue'
 import api from '../api'
 import { de, tr } from 'vuetify/locale'
 import { filterItems } from 'vuetify/lib/composables/filter.mjs'
@@ -133,6 +140,40 @@ async function fetchProducts() {
 //this line can be changed to allow access under database population - admin_status === true/false
 const isAdmin = computed(() => account.value?.admin_status === true)
 
+
+// functions to handle the timeout of the confirm logout button
+const isLogoutConfirming = ref(false)
+let logoutConfirmTimer: ReturnType<typeof setTimeout> | null = null
+
+const resetLogoutConfirm = () => {
+  isLogoutConfirming.value = false
+  if (logoutConfirmTimer) {
+    clearTimeout(logoutConfirmTimer)
+    logoutConfirmTimer = null
+  }
+}
+
+const handleLogoutClick = async () => {
+  if (!isLogoutConfirming.value) {
+    isLogoutConfirming.value = true
+    logoutConfirmTimer = setTimeout(() => {
+      isLogoutConfirming.value = false
+      logoutConfirmTimer = null
+    }, 3000)
+    return
+  }
+
+  resetLogoutConfirm()
+  await logout()
+}
+
+// clears timer on unmount of the page
+onBeforeUnmount(() => {
+  if (logoutConfirmTimer) {
+    clearTimeout(logoutConfirmTimer)
+  }
+})
+
 // logout function to clear local storage and redirect to home page
 const logout = async () => {
 const token = localStorage.getItem('token')
@@ -142,11 +183,12 @@ if (token) {
   } catch (e) {
     console.error('Logout failed', e)
   }
-}
 localStorage.removeItem('account')
 localStorage.removeItem('token')
 window.location.href = '/'
 }
+}
+
 </script>
 
 <style scoped>
@@ -165,6 +207,14 @@ align-items: center;
 .logo {
 font-size: 20px;
 font-weight: bold;
+text-decoration: none;
+border: none;
+color: inherit;
+}
+
+.logo:hover{
+  color: inherit;
+  text-decoration: none;
 }
 
 .nav-links {
@@ -194,8 +244,26 @@ border: none;
 cursor: pointer;
 }
 
+
+.logout-btn {
+width: 14ch;
+color: #ffffff;
+background-color: #c62828;
+}
+
+.logout-btn-confirm {
+color: #ffffff;
+background-color: #c62828;
+border-radius: 0px;
+width: 14ch;
+}
+
+.logout-btn-confirm:hover {
+color: #ffffff;
+}
+
 .nav-links button:hover {
-color: #616461;
+color: #3b3d3b;
 }
 
 </style>

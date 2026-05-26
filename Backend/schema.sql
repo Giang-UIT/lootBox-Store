@@ -44,7 +44,7 @@ CREATE TABLE cart_items (
     item_quantity   INTEGER NOT NULL DEFAULT 0 CHECK (item_quantity >= 0), 
     PRIMARY KEY (cart_id, product_id),
     FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE orders (
     time_created    TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE,
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
-    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE RESTRICT
+    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE
 );
 
 -- table for items in the order, includes the order id and product id and the quantity of items, references foreign keys for id's from orders and products
@@ -72,7 +72,7 @@ CREATE TABLE order_items (
     stock_quantity  INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT 
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- table for addresses, includes the address id, account id, street, city, postal code, country and references the account id as a foreign key, deletes rows referencing the account id when it is deleted

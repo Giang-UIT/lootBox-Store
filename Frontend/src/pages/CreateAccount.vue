@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import api from '../api'
+import { useRouter } from 'vue-router'
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const msg = ref('')
+const router = useRouter()
 
 async function createAccount() {
   msg.value = ''
+
+  if (!name.value.trim() || !email.value.trim() || !password.value.trim()) {
+    msg.value = 'Please fill in all fields before submitting.'
+    return
+  }
+
   try {
     const { data } = await api.post('/signup/', {
       name: name.value,
@@ -19,8 +27,13 @@ async function createAccount() {
     name.value = ''
     email.value = ''
     password.value = ''
+
+    await router.push('/login')
   } catch (e: any) {
-    msg.value = e.message
+    if (e.response?.status === 400)
+      msg.value = 'Email already exists.'
+    else if (e.response?.status === 500)
+      msg.value = 'Could not create account. Error from server side.'
   }
 }
 </script>
