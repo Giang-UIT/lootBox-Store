@@ -314,7 +314,7 @@ class AddressAPITests(APITestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
+            
         # Verify address was deleted
         with self.assertRaises(Address.DoesNotExist):
             Address.objects.get(id=address.id)
