@@ -7,14 +7,14 @@ import json
 from django.db import IntegrityError
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
-from .models import Course, Account
+from .models import Account, Product, Address
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .forms import LoginForm, SignUpForm
 from django.shortcuts import render, redirect
 from . import account
-from .models import Account, Product, Course
-from .models import Course, Account, Address
+
+
 from . import address as address_service
 from .cart import (
     get_or_create_cart,
@@ -118,11 +118,12 @@ def signup(request):
 
 @api_view(['POST'])
 def login_view(request):
-
+    
+    print(f"the request: {request}")
+    
     #POST login - authenticate and return a session token
     email = request.data.get("email")
     password = request.data.get("password")
-
     
     #Sanity check for email and password in request
     if not email or not password:
@@ -236,6 +237,7 @@ def product_list(request):
     
     #GET  /api/products/  → list all products
     #POST /api/products/  → create a new product
+    print("request")
     
     if request.method == 'GET':
         products = product_service.get_all_products()

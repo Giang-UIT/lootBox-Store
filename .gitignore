@@ -3,7 +3,9 @@
 # =======================================================================
 
 backend/univ/courses/__pycache__/
+backend/univ/courses/migrations/
 **.pyc
+
 
 backend/univ/db.sqlite3
 **.sqlite3
