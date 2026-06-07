@@ -130,6 +130,7 @@ async function fetchProducts() {
 
   } catch (e: any) {
     console.log("could not get records from product table")
+    
   } finally {
     loading.value = false
   }
