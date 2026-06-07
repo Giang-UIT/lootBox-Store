@@ -3,7 +3,7 @@ name: Django CI
 on:
   push:
     branches: [ "main" ]
-    path:
+    paths:
     - 'Backend/**'
   pull_request:
     branches: [ "main" ]
@@ -29,6 +29,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+      working-directory: ./Backend/univ
+    - name: Setup migration
+      run: |
+          python manage.py makemigrations courses
+          python manage.py migrate
+          python populate.py 
       working-directory: ./Backend/univ
     - name: Run Tests
       run: |
