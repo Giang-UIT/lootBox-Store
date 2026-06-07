@@ -10,7 +10,7 @@ on:
       - 'Frontend/**'
   pull_request:
     branches: [ "main" ]
-    path: 
+    paths: 
       - 'Frontend/**'
   
 
@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 25.x]
+        node-version: [20.x, 22.x]
         os: [ubuntu-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
