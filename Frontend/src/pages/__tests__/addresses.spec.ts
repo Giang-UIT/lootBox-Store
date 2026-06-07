@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import Addresses from '../addresses.vue'
+import api from '../../api'
+
+vi.mock('../../api', () => ({
+  default: {
+    get: vi.fn(),
+  },
+}))
 
 const mockPush = vi.fn()
 
@@ -73,13 +80,6 @@ Object.defineProperty(window, 'confirm', {
   writable: true,
 })
 
-const mockFetch = vi.fn()
-
-Object.defineProperty(window, 'fetch', {
-  value: mockFetch,
-  writable: true,
-})
-
 const mountComponent = () => mount(Addresses)
 
 describe('Addresses', () => {
@@ -87,10 +87,7 @@ describe('Addresses', () => {
     vi.clearAllMocks()
     localStorage.clear()
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockAddresses),
-    })
+    vi.mocked(api.get).mockResolvedValue({ status: 200, data: { json: mockAddresses } })
   })
 
   //Authentication
@@ -104,7 +101,7 @@ describe('Addresses', () => {
 
     expect(window.alert).toHaveBeenCalledWith('No account found. Please log in.')
     expect(mockPush).toHaveBeenCalledWith('/login')
-    expect(mockFetch).not.toHaveBeenCalled()
+    expect(api.get).not.toHaveBeenCalled()
   })
 
   //Rendering
@@ -128,10 +125,7 @@ describe('Addresses', () => {
   it('shows "No addresses found." when address list is empty', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue([]),
-    })
+    vi.mocked(api.get).mockResolvedValue({ status: 200, data: { json: [] } })
 
     const wrapper = mountComponent()
     await flushPromises()
@@ -163,32 +157,27 @@ describe('Addresses', () => {
 
   //loadAddresses
 
-  //purpose: ensures fetch is called with correct endpoint on mount
+  //purpose: ensures api.get is called with correct endpoint on mount
   //inputs: component mounts with account in localStorage
-  //outputs: fetch called with /accounts/1/addresses/
-  it('calls fetch with the correct endpoint on mount', async () => {
+  //outputs: api.get called with /accounts/1/addresses/
+  it('calls api.get with the correct endpoint on mount', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
     mountComponent()
     await flushPromises()
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      'http://127.0.0.1:8000/api/accounts/1/addresses/'
-    )
+    expect(api.get).toHaveBeenCalledWith('/accounts/1/addresses/')
   })
 
   //purpose: logs error when response is not ok
-  //inputs: API returns response with ok: false
+  //inputs: API returns response with falsy status
   //outputs: error logged and no addresses rendered
-  it('logs an error when fetch response is not ok', async () => {
+  it('logs an error when api.get response is not ok', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    mockFetch.mockResolvedValue({
-      ok: false,
-      json: vi.fn(),
-    })
+    vi.mocked(api.get).mockResolvedValue({ status: 0, data: {} })
 
     mountComponent()
     await flushPromises()
@@ -198,16 +187,16 @@ describe('Addresses', () => {
     consoleSpy.mockRestore()
   })
 
-  //purpose: logs error when fetch throws
-  //inputs: API throws error during fetch
+  //purpose: logs error when api.get throws
+  //inputs: api.get rejects with an error
   //outputs: error logged and no addresses rendered
-  it('logs an error when fetch throws', async () => {
+  it('logs an error when api.get throws', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const error = new Error('Network error')
 
-    mockFetch.mockRejectedValue(error)
+    vi.mocked(api.get).mockRejectedValue(error)
 
     mountComponent()
     await flushPromises()
@@ -238,7 +227,7 @@ describe('Addresses', () => {
 
   //purpose: ensures address is not deleted if user cancels confirmation
   //inputs: user clicks delete but cancels confirm dialog
-  //outputs: fetch not called, address still rendered
+  //outputs: api.get called only once (for initial load), address still rendered
   it('does not delete address when confirm is cancelled', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
     vi.mocked(window.confirm).mockReturnValue(false)
@@ -250,25 +239,20 @@ describe('Addresses', () => {
     await deleteButton.trigger('click')
     await flushPromises()
 
-    expect(mockFetch).toHaveBeenCalledTimes(1) // only initial GET
+    expect(api.get).toHaveBeenCalledTimes(1) // only initial GET
     expect(wrapper.findAll('.address-card')).toHaveLength(2)
   })
 
   //purpose: ensures address is deleted when user confirms and response is ok
   //inputs: user clicks delete and accepts confirm dialog, API returns ok
-  //outputs: fetch called with correct endpoint and method, address removed from page
+  //outputs: api.get called with correct endpoint and method, address removed from page
   it('deletes address when confirm is accepted and response is ok', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
     vi.mocked(window.confirm).mockReturnValue(true)
 
-    mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: vi.fn().mockResolvedValue(mockAddresses),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-      })
+    vi.mocked(api.get)
+      .mockResolvedValueOnce({ status: 200, data: { json: mockAddresses } })
+      .mockResolvedValueOnce({ status: 200 })
 
     const wrapper = mountComponent()
     await flushPromises()
@@ -277,11 +261,9 @@ describe('Addresses', () => {
     await deleteButton.trigger('click')
     await flushPromises()
 
-    expect(mockFetch).toHaveBeenLastCalledWith(
-      'http://127.0.0.1:8000/api/accounts/1/addresses/10/',
-      {
-        method: 'DELETE',
-      }
+    expect(api.get).toHaveBeenLastCalledWith(
+      '/accounts/1/addresses/10/',
+      { method: 'DELETE' }
     )
 
     expect(wrapper.findAll('.address-card')).toHaveLength(1)
@@ -291,19 +273,14 @@ describe('Addresses', () => {
 
   //purpose: shows alert when delete response is not ok
   //inputs: user clicks delete and accepts confirm dialog, API returns not ok
-  //outputs: alert shown and address still rendered 
+  //outputs: alert shown and address still rendered
   it('shows alert when delete response is not ok', async () => {
     localStorage.setItem('account', JSON.stringify(mockAccount))
     vi.mocked(window.confirm).mockReturnValue(true)
 
-    mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: vi.fn().mockResolvedValue(mockAddresses),
-      })
-      .mockResolvedValueOnce({
-        ok: false,
-      })
+    vi.mocked(api.get)
+      .mockResolvedValueOnce({ status: 200, data: { json: mockAddresses } })
+      .mockResolvedValueOnce({ status: 0 })
 
     const wrapper = mountComponent()
     await flushPromises()
@@ -326,11 +303,8 @@ describe('Addresses', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const error = new Error('Delete failed')
 
-    mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: vi.fn().mockResolvedValue(mockAddresses),
-      })
+    vi.mocked(api.get)
+      .mockResolvedValueOnce({ status: 200, data: { json: mockAddresses } })
       .mockRejectedValueOnce(error)
 
     const wrapper = mountComponent()
