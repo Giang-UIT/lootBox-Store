@@ -1,3 +1,10 @@
+# Deployment
+This e-commerce platform has been deployed on the internet using Vercel for hosting the front end and Render for hosting the back end
+
+URI: https://store-ten-vert-16.vercel.app/
+
+--- 
+
 # Loot Box Store
 
 A web-based e-commerce platform for purchasing curated boxes of snacks 
