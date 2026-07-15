@@ -1,7 +1,7 @@
 # Deployment
 This e-commerce platform has been deployed on the internet using Vercel for hosting the front end and Render for hosting the back end. Thus, there have been some modifications to the original source code. 
 
-URI: https://store-ten-vert-16.vercel.app/
+URI: [lootBox Store](https://store-ten-vert-16.vercel.app/)
 
 The original repository: [Original repo](https://github.com/Aleasto10/INF-2900-Store)
 
