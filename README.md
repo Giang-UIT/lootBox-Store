@@ -17,7 +17,7 @@ software development project following agile development practices.
 
 | Name                      | UiT ID    | Github username  |
 |---------------------------|-----------|------------------|
-| Alejandro Rodriguez Perez | alrod7901 | Alesato10        |
+| Alejandro Rodriguez Perez | alrod7901 | Aleasto10        |
 | Anders Sellæg Ellingsen   | anell8161 | Anderssellingsen |
 | Andrea Cárdenas Mayoral   | ancar8714 | ancar8714        |
 | Giang Hoang Nguyen        | gng000    | Giang-UIT        |
