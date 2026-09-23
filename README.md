@@ -3,7 +3,7 @@ This e-commerce platform has been deployed on the internet using Vercel for host
 
 URI: [lootBox Store](https://store-ten-vert-16.vercel.app/)
 
-The original repository: [Original repo](https://github.com/Aleasto10/INF-2900-Store)
+The original repository: [Original repo](https://github.com/Aleasto10/INF-2900-Store) (currently private)
 
 --- 
 
